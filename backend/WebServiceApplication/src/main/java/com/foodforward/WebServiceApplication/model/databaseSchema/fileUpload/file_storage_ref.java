@@ -1,6 +1,8 @@
 package com.foodforward.WebServiceApplication.model.databaseSchema.fileUpload;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 public class file_storage_ref {
@@ -11,8 +13,8 @@ public class file_storage_ref {
     private String descr;
     private String created_by_user_guid;
     private String updated_by_user_guid;
-    private ZonedDateTime created_date;
-    private ZonedDateTime updated_date;
+    private Instant created_date;
+    private Instant updated_date;
     private static String schemaAlias = "file_storage_ref";
 
     public UUID getGuid() {
@@ -71,19 +73,19 @@ public class file_storage_ref {
         this.updated_by_user_guid = updated_by_user_guid;
     }
 
-    public ZonedDateTime getCreated_date() {
+    public Instant getCreated_date() {
         return created_date;
     }
 
-    public void setCreated_date(ZonedDateTime created_date) {
+    public void setCreated_date(Instant created_date) {
         this.created_date = created_date;
     }
 
-    public ZonedDateTime getUpdated_date() {
+    public Instant getUpdated_date() {
         return updated_date;
     }
 
-    public void setUpdated_date(ZonedDateTime updated_date) {
+    public void setUpdated_date(Instant updated_date) {
         this.updated_date = updated_date;
     }
 
