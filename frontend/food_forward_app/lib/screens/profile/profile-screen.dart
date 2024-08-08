@@ -18,7 +18,7 @@ class ProfileScreen extends StatelessWidget {
             // Create an instance of FileStorageRef
             FileStorageRefSchema fileStorageRefSchema = FileStorageRefSchema(
               guid: '123e4567-e89b-12d3-a456-426614174000', // Example UUID
-              fileName: 'example.txt',
+              fileName: 'testexample.txt',
               fileUrl: 'https://example.com/files/example.txt',
               fileHash: 'abc123',
               descr: 'Example file description',

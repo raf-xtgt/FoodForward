@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_forward_app/homepage.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

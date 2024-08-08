@@ -19,6 +19,10 @@ final int selectedIndex;
           label: 'Home',
         ),
         BottomNavigationBarItem(
+          icon: Icon(Icons.camera),
+          label: 'Receipt Capture',
+        ),
+        BottomNavigationBarItem(
           icon: Icon(Icons.person),
           label: 'Profile',
         ),
