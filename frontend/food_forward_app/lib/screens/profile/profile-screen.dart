@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:food_forward_app/api-services/api-model/db-model/FileStorageRef.dart';
-import 'package:food_forward_app/api-services/api-model/db-schema/file-storage-ref.dart';
-import 'package:food_forward_app/api-services/shared-utils/api-service.dart';
+import 'package:food_forward_app/api/api-services/api-model/db-model/FileStorageRef.dart';
+import 'package:food_forward_app/api/api-services/api-model/db-schema/file-storage-ref.dart';
+import 'package:food_forward_app/api/api-services/shared-utils/api-service.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});

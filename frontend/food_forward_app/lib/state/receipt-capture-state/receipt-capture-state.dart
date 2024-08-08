@@ -4,6 +4,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:food_forward_app/screens/receipt-capture/receipt-capture-screen.dart';
 import 'package:food_forward_app/screens/receipt-capture/receipt-display-screen.dart';
+import 'package:food_forward_app/api/api-services/services/image-upload-service/image-upload-service.dart';
+
 
 class TakePictureScreenState extends State<ReceiptCaptureScreen> {
   late CameraController _controller;
@@ -34,6 +36,21 @@ class TakePictureScreenState extends State<ReceiptCaptureScreen> {
     super.dispose();
   }
 
+  Future<void> uploadImages() async {
+    await ImageUploadService.uploadImages(_images);
+    clearImageList();
+  }
+
+  clearImageList(){
+    // Clear images if needed
+    setState(() {
+      _images.clear();
+      _imagesTaken = 0;
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +64,7 @@ class TakePictureScreenState extends State<ReceiptCaptureScreen> {
             return Stack(
               children: [
                 Container(
-                  color: Colors.red,
+                  color: Color.fromARGB(255, 139, 138, 138),
                   child: Center(
                     child: CameraPreview(_controller),
                   ),
@@ -68,6 +85,20 @@ class TakePictureScreenState extends State<ReceiptCaptureScreen> {
                         fontSize: 16.0,
                       ),
                     ),
+                  ),
+                ),
+                Positioned(
+                  top: 10.0,
+                  right: 3.0,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_images.isNotEmpty) {
+                        uploadImages();
+                      } else {
+                        print('No images to upload');
+                      }
+                    },
+                    child: const Text('Upload'),
                   ),
                 ),
               ],

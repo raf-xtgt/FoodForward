@@ -18,7 +18,7 @@ public class FileUploadController {
         return "Success";
     }
 
-    @PostMapping(value ="/multi", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value ="/multi", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String multiImageUpload (@RequestParam final MultipartFile[] files){
         new FileUploadService().uploadMultiFiles(files);
         return "Success";

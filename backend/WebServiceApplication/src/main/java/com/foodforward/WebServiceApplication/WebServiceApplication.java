@@ -22,7 +22,7 @@ public class WebServiceApplication {
 		FileInputStream serviceAccount =
 				new FileInputStream(file.getAbsolutePath());
 
-		FirebaseOptions options = new FirebaseOptions.Builder()
+		FirebaseOptions options = FirebaseOptions.builder()
 				.setCredentials(GoogleCredentials.fromStream(serviceAccount))
 				.setStorageBucket(Config.BUCKET_NAME)
 				.build();

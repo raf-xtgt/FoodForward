@@ -1,4 +1,4 @@
-import 'package:food_forward_app/api-services/api-model/db-schema/file-storage-ref.dart';
+import 'package:food_forward_app/api/api-services/api-model/db-schema/file-storage-ref.dart';
 
 
 class FilestorageRef {
