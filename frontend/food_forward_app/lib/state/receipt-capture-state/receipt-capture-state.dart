@@ -1,15 +1,15 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:food_forward_app/screens/receipt-capture/receipt-capture-screen.dart';
 import 'package:food_forward_app/screens/receipt-capture/receipt-display-screen.dart';
 
-
 class TakePictureScreenState extends State<ReceiptCaptureScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
+  final List<String> _images = []; // List to store image paths
+  int _imagesTaken = 0; // Counter for images taken
 
   @override
   void initState() {
@@ -37,7 +37,6 @@ class TakePictureScreenState extends State<ReceiptCaptureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Take a picture')),
       // You must wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner until the
       // controller has finished initializing.
@@ -45,10 +44,35 @@ class TakePictureScreenState extends State<ReceiptCaptureScreen> {
         future: _initializeControllerFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            // If the Future is complete, display the preview.
-            return CameraPreview(_controller);
+            return Stack(
+              children: [
+                Container(
+                  color: Colors.red,
+                  child: Center(
+                    child: CameraPreview(_controller),
+                  ),
+                ),
+                Positioned(
+                  bottom: 16.0,
+                  left: 16.0,
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Text(
+                      'Images Captured: $_imagesTaken',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
           } else {
-            // Otherwise, display a loading indicator.
             return const Center(child: CircularProgressIndicator());
           }
         },
@@ -69,15 +93,22 @@ class TakePictureScreenState extends State<ReceiptCaptureScreen> {
             if (!context.mounted) return;
 
             // If the picture was taken, display it on a new screen.
-            await Navigator.of(context).push(
+            final result = await Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => ReceiptDisplayScreen(
-                  // Pass the automatically generated path to
-                  // the DisplayPictureScreen widget.
                   imagePath: image.path,
                 ),
               ),
             );
+
+            // If the user chose to continue, save the image.
+            if (result == true) {
+              setState(() {
+                _images.add(image.path);
+                _imagesTaken++;
+              });
+            }
+
           } catch (e) {
             // If an error occurs, log the error to the console.
             print(e);

@@ -1,5 +1,6 @@
 package com.foodforward.WebServiceApplication;
 
+import com.foodforward.WebServiceApplication.shared.constants.Config;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.SpringApplication;
@@ -23,6 +24,7 @@ public class WebServiceApplication {
 
 		FirebaseOptions options = new FirebaseOptions.Builder()
 				.setCredentials(GoogleCredentials.fromStream(serviceAccount))
+				.setStorageBucket(Config.BUCKET_NAME)
 				.build();
 		FirebaseApp.initializeApp(options);
 		SpringApplication.run(WebServiceApplication.class, args);

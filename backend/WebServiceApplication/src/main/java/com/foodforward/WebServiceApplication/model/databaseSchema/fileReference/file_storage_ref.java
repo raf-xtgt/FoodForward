@@ -1,8 +1,6 @@
-package com.foodforward.WebServiceApplication.model.databaseSchema.fileUpload;
+package com.foodforward.WebServiceApplication.model.databaseSchema.fileReference;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.UUID;
 
 public class file_storage_ref {

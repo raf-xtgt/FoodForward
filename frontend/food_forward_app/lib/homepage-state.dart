@@ -5,7 +5,6 @@ import 'package:food_forward_app/screens/profile/profile-screen.dart';
 import 'package:food_forward_app/components/bottom-navigation/bottom-navigation.dart';
 import 'package:food_forward_app/screens/receipt-capture/receipt-capture-screen.dart';
 import 'dart:async';
-import 'dart:io';
 
 import 'package:camera/camera.dart';
 class MyHomePageState extends State<MyHomePage> {

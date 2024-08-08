@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 
-
-// A widget that displays the picture taken by the user.
 class ReceiptDisplayScreen extends StatelessWidget {
   final String imagePath;
 
@@ -12,9 +10,35 @@ class ReceiptDisplayScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Display the Picture')),
-      // The image is stored as a file on the device. Use the `Image.file`
-      // constructor with the given path to display the image.
-      body: Image.file(File(imagePath)),
+      body: Column(
+        children: [
+          Expanded(
+            child: Image.file(File(imagePath)),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // Discard the image and go back to the previous screen.
+                    Navigator.of(context).pop(false); // Return false
+                  },
+                  child: const Text('Discard'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Save the image and go back to the previous screen.
+                    Navigator.of(context).pop(true); // Return true
+                  },
+                  child: const Text('Continue'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

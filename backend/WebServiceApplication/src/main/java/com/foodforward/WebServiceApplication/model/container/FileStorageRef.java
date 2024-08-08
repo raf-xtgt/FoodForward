@@ -1,6 +1,6 @@
 package com.foodforward.WebServiceApplication.model.container;
 
-import com.foodforward.WebServiceApplication.model.databaseSchema.fileUpload.file_storage_ref;
+import com.foodforward.WebServiceApplication.model.databaseSchema.fileReference.file_storage_ref;
 
 public class FileStorageRef {
     private final file_storage_ref  file_storage_ref;
