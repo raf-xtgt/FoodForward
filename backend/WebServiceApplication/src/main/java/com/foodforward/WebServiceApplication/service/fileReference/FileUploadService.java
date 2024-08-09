@@ -45,7 +45,7 @@ public class FileUploadService {
             Bucket bucket = storage.get(bucketName);
 
             // Generate a unique identifier for the file
-            String fileName = file.getOriginalFilename() + "-" + ZonedDateTime.now();
+            String fileName = Config.STORAGE_FOLDER + "Receipt-" + ZonedDateTime.now().toLocalDateTime().toString();
 
             // Upload file to Firebase Storage
             Blob blob = bucket.create(fileName, file.getInputStream(), file.getContentType());
