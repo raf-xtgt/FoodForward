@@ -1,4 +1,4 @@
-package com.foodforward.WebServiceApplication.model.container;
+package com.foodforward.WebServiceApplication.model.container.fileReference;
 
 import com.foodforward.WebServiceApplication.model.databaseSchema.fileReference.file_storage_ref;
 

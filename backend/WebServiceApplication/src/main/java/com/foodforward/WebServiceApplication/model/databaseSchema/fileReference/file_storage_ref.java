@@ -7,7 +7,6 @@ public class file_storage_ref {
     private UUID guid;
     private String file_name;
     private String file_url;
-    private String file_hash;
     private String descr;
     private String created_by_user_guid;
     private String updated_by_user_guid;
@@ -37,14 +36,6 @@ public class file_storage_ref {
 
     public void setFile_url(String file_url) {
         this.file_url = file_url;
-    }
-
-    public String getFile_hash() {
-        return file_hash;
-    }
-
-    public void setFile_hash(String file_hash) {
-        this.file_hash = file_hash;
     }
 
     public String getDescr() {

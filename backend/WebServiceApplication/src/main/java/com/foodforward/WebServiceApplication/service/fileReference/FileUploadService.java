@@ -1,13 +1,11 @@
 package com.foodforward.WebServiceApplication.service.fileReference;
 
 import com.foodforward.WebServiceApplication.databaseConnection.DatabaseConnectionService;
-import com.foodforward.WebServiceApplication.model.container.FileStorageRef;
+import com.foodforward.WebServiceApplication.model.container.fileReference.FileStorageRef;
 import com.foodforward.WebServiceApplication.model.databaseSchema.fileReference.file_storage_ref;
 import com.foodforward.WebServiceApplication.shared.constants.Config;
 import com.foodforward.WebServiceApplication.shared.fileUpload.FileUploadUtils;
-import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import com.google.cloud.storage.Blob;
@@ -26,9 +24,20 @@ public class FileUploadService {
 
     public void createReference(final FileStorageRef container){
         final Firestore db = new DatabaseConnectionService().getDbConnection();
-        final UUID fileGuid = UUID.randomUUID();
-        ApiFuture<WriteResult> future = db.collection(file_storage_ref.getSchemaAlias()).document(fileGuid.toString()).set(container);
+        db.collection(file_storage_ref.getSchemaAlias())
+                .document(container.getFile_storage_ref().getGuid().toString()).set(container);
         log.info("Successfully uploaded file");
+    }
+
+    private FileStorageRef constructFileStorageRef(final String fileName,
+                                                   final String fileUrl){
+        file_storage_ref reference = new file_storage_ref();
+        reference.setGuid(UUID.randomUUID());
+        reference.setFile_name(fileName);
+        reference.setFile_url(fileUrl);
+        reference.setCreated_date(Instant.now());
+        reference.setUpdated_date(Instant.now());
+        return new FileStorageRef(reference);
     }
 
     public void uploadMultiFiles(final MultipartFile[] files){
@@ -61,20 +70,6 @@ public class FileUploadService {
             log.error("Upload failed");
             e.printStackTrace();
         }
-
-
-    }
-
-    private FileStorageRef constructFileStorageRef(final String fileName,
-                                                   final String fileUrl){
-        String fileHash = UUID.randomUUID().toString();
-        file_storage_ref reference = new file_storage_ref();
-        reference.setFile_hash(fileHash);
-        reference.setFile_name(fileName);
-        reference.setFile_url(fileUrl);
-        reference.setCreated_date(Instant.now());
-        reference.setUpdated_date(Instant.now());
-        return new FileStorageRef(reference);
 
 
     }

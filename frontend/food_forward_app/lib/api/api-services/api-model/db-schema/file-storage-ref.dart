@@ -4,7 +4,6 @@ class FileStorageRefSchema {
   final String guid;
   final String fileName;
   final String fileUrl;
-  final String fileHash;
   final String descr;
   final String createdByUserGuid;
   final String updatedByUserGuid;
@@ -15,7 +14,6 @@ class FileStorageRefSchema {
     required this.guid,
     required this.fileName,
     required this.fileUrl,
-    required this.fileHash,
     required this.descr,
     required this.createdByUserGuid,
     required this.updatedByUserGuid,
@@ -29,7 +27,6 @@ class FileStorageRefSchema {
       'guid': guid,
       'file_name': fileName,
       'file_url': fileUrl,
-      'file_hash': fileHash,
       'descr': descr,
       'created_by_user_guid': createdByUserGuid,
       'updated_by_user_guid': updatedByUserGuid,
