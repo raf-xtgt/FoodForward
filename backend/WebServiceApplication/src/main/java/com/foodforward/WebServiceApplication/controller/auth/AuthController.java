@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodforward.WebServiceApplication.model.container.auth.AuthUserProfile;
 import com.foodforward.WebServiceApplication.model.dto.AuthDto;
 import com.foodforward.WebServiceApplication.service.auth.AuthService;
+import com.foodforward.WebServiceApplication.shared.apiResponse.model.ApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +28,8 @@ public class AuthController {
         if (profileCont.isPresent()) {
             StreamingResponseBody responseBody = outputStream -> {
                 try {
-                    String jsonResponse = new ObjectMapper().writeValueAsString(profileCont.get());
+                    ApiResponse<AuthUserProfile> apiResponse = new ApiResponse<>(200, profileCont.get());
+                    String jsonResponse = new ObjectMapper().writeValueAsString(apiResponse);
                     outputStream.write(jsonResponse.getBytes());
                 } catch (IOException e) {
                     throw new RuntimeException("Error streaming response", e);
@@ -38,11 +40,12 @@ public class AuthController {
                     .body(responseBody);
         } else {
             StreamingResponseBody errorResponse = outputStream -> {
-                String errorMessage = "Sign up via login and email failed";
-                outputStream.write(errorMessage.getBytes());
+                ApiResponse<String> apiResponse = new ApiResponse<>(500, "Sign up via login and email failed");
+                String jsonResponse = new ObjectMapper().writeValueAsString(apiResponse);
+                outputStream.write(jsonResponse.getBytes());
             };
-            return ResponseEntity.internalServerError()
-                    .contentType(MediaType.TEXT_PLAIN)
+            return ResponseEntity.status(500)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .body(errorResponse);
         }
     }

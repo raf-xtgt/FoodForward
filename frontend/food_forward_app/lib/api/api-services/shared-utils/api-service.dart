@@ -21,7 +21,7 @@ class ApiService {
     }
   }
 
-    static Future<String> postMethod(Map<String, dynamic> requestBody, final String url) async {
+    static Future<http.Response> postMethod(Map<String, dynamic> requestBody, final String url) async {
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -31,14 +31,17 @@ class ApiService {
         body: jsonEncode(requestBody),
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final data = json.decode(response.body);
-        return data.toString();
-      } else {
-        return 'Failed to post data: ${response.statusCode}';
-      }
+      return response;
+
+    
     } catch (e) {
-      return 'Error: $e';
+      return http.Response(
+        jsonEncode({'error': 'Error: $e'}),
+        500,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
     }
   }
 }

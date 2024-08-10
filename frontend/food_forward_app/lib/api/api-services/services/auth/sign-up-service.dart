@@ -2,6 +2,9 @@ import 'package:food_forward_app/api/api-services/api-model/db-model/AuthDto.dar
 import 'package:food_forward_app/api/api-services/shared-utils/api-service.dart';
 import 'dart:async';
 import 'package:food_forward_app/utils/config.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 
 class SignUpService {
   
@@ -9,17 +12,19 @@ class SignUpService {
       const String url =  "${Config.baseApiUrl}/auth/sign-in/email-and-password";
             
     try {
-      String result = await ApiService.postMethod(authDto.toJson(), url);
-      print("Sign in result " + result);
+      http.Response result = await ApiService.postMethod(authDto.toJson(), url);
+      print("Sign in result " + result.toString());
+      final Map<String, dynamic> responseBody = json.decode(result.body);
+      print(responseBody);
 
-      // if (response.statusCode == 200) {
-      //   print('Upload successful');
+      if (result.statusCode == 200) {
+        print('Sign in successful');
 
-      // } else {
-      //   print('Upload failed with status: ${response.statusCode}');
-      // }
+      } else {
+        print('Sign in failed with status: ${responseBody["statusCode"]}');
+      }
     } catch (e) {
-      print('Error uploading images: $e');
+      print('Error signing: $e');
     }
   }
   

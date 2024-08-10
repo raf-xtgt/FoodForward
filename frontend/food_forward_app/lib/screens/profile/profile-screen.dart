@@ -3,6 +3,7 @@ import 'package:food_forward_app/api/api-services/api-model/db-model/FileStorage
 import 'package:food_forward_app/api/api-services/api-model/db-schema/file-storage-ref.dart';
 import 'package:food_forward_app/api/api-services/shared-utils/api-service.dart';
 import 'package:food_forward_app/utils/config.dart';
+import 'package:http/http.dart' as http;
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -32,25 +33,8 @@ class ProfileScreen extends StatelessWidget {
 
             // Call the postData method and handle the result
             const String url =  "${Config.baseApiUrl}/upload-image/create";
-            String result = await ApiService.postMethod(cont.toJson(), url);
+            http.Response result = await ApiService.postMethod(cont.toJson(), url);
             // Show a dialog with the result
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text('HTTP POST Request Result'),
-                  content: Text(result),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('OK'),
-                    ),
-                  ],
-                );
-              },
-            );
           },
           child: const Text('Send Data'),
         ),
