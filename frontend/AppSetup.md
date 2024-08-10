@@ -14,3 +14,10 @@ flutter run
 ```
 flutter devices
 ```
+
+## Cleaning and rebuilding the project
+```
+flutter clean
+flutter pub get
+flutter run
+```

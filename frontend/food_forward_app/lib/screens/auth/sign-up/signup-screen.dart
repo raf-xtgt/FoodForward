@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-model/AuthDto.dart';
 import 'package:food_forward_app/api/api-services/services/auth/sign-up-service.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SignupScreen extends StatefulWidget {
   @override
@@ -12,6 +16,10 @@ class _SignupScreenState extends State<SignupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _isButtonEnabled = ValueNotifier<bool>(false);
+  AndroidOptions _getAndroidOptions() => const AndroidOptions(
+        encryptedSharedPreferences: true,
+      );
+  final FlutterSecureStorage storage = FlutterSecureStorage();
 
   @override
   void initState(){
@@ -47,7 +55,28 @@ class _SignupScreenState extends State<SignupScreen> {
           email: email,
           password: password
         );
-      SignUpService.signIn(authDto);
+      http.Response signInResponse = await SignUpService.signIn(authDto);
+      final Map<String, dynamic> responseBody = json.decode(signInResponse.body);
+      print(responseBody);
+
+      if (signInResponse.statusCode == 200) {
+        print('Sign in successful');
+        // Extract accessToken from the response
+        final Map<String, dynamic> responseData = responseBody["data"]["user_profile"];
+        print(responseData);
+        final String accessToken = responseData["access_token"];
+        print(accessToken);
+        await storage.write(key: 'accessToken', value: accessToken);
+        // Save accessToken in local storage
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('accessToken', accessToken);
+
+        // Redirect to the homepage
+        Navigator.pushReplacementNamed(context, '/home');
+
+      } else {
+        print('Sign in failed with status: ${responseBody["statusCode"]}');
+      }
     }
   }
   
