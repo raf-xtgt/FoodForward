@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:food_forward_app/homepage.dart';
 import 'package:food_forward_app/screens/home/home-screen.dart';
-import 'package:food_forward_app/screens/profile/profile-screen.dart';
 import 'package:food_forward_app/components/bottom-navigation/bottom-navigation.dart';
 import 'package:food_forward_app/screens/receipt-capture/receipt-capture-screen.dart';
 import 'dart:async';
 
 import 'package:camera/camera.dart';
+import 'package:food_forward_app/screens/stock-and-expiry/stock-and-expiry-main/stock-and-expiry-main.dart';
 
 class MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0; // Track the index of the selected tab
@@ -71,7 +71,7 @@ class MyHomePageState extends State<MyHomePage> {
                 children: <Widget>[
                   const HomeScreen(),
                   if (cam != null) ReceiptCaptureScreen(camera: cam!), // Ensure cam is not null before using it
-                  const ProfileScreen(),
+                  StockAndExpiryScreen(),
                 ],
               ),
             ),

@@ -47,8 +47,6 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 20), // Add spacing between card and other content
-            const Text('Profile Page Content'),
             const SizedBox(height: 20), // Add spacing between text and button
             ElevatedButton(
               onPressed: () async {

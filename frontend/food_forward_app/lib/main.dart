@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_forward_app/homepage.dart';
 import 'package:food_forward_app/screens/auth/login/login-screen.dart';
 import 'package:food_forward_app/screens/auth/sign-up/signup-screen.dart'; // Import your signup screen
+import 'package:food_forward_app/screens/stock-and-expiry/stock-and-expiry-main/stock-and-expiry-main.dart';
 import 'package:food_forward_app/utils/auth-utils.dart';
 
 void main() {
@@ -39,6 +40,8 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const MyHomePage(title: 'FoodForward'),
         '/login': (context) => LoginScreen(),
         '/signup': (context) => SignupScreen(), // Add your signup screen route here
+        '/stock-and-expirty': (context) => StockAndExpiryScreen(),
+
       },
     );
   }

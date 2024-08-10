@@ -19,12 +19,12 @@ final int selectedIndex;
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.camera),
+          icon: Icon(Icons.document_scanner),
           label: 'Receipt Capture',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
+          icon: Icon(Icons.food_bank),
+          label: 'Stock & Expiry',
         ),
       ],
       currentIndex: selectedIndex,
