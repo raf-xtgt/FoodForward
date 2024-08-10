@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-model/FileStorageRef.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-schema/file-storage-ref.dart';
 import 'package:food_forward_app/api/api-services/shared-utils/api-service.dart';
+import 'package:food_forward_app/utils/config.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -20,7 +21,6 @@ class ProfileScreen extends StatelessWidget {
               guid: '123e4567-e89b-12d3-a456-426614174000', // Example UUID
               fileName: 'testexample.txt',
               fileUrl: 'https://example.com/files/example.txt',
-              fileHash: 'abc123',
               descr: 'Example file description',
               createdByUserGuid: 'user-uuid-123',
               updatedByUserGuid: 'user-uuid-123',
@@ -31,7 +31,8 @@ class ProfileScreen extends StatelessWidget {
             final FilestorageRef cont = FilestorageRef(fileStorageRefSchema: fileStorageRefSchema);
 
             // Call the postData method and handle the result
-            String result = await ApiService.postMethod(cont.toJson());
+            const String url =  "${Config.baseApiUrl}/upload-image/create";
+            String result = await ApiService.postMethod(cont.toJson(), url);
             // Show a dialog with the result
             showDialog(
               context: context,

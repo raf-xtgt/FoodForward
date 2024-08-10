@@ -10,13 +10,14 @@ import java.util.UUID;
 
 public class AuthHelperService {
     public AuthUserProfile constructUserProfile(final UserRecord userRecord,
-                                                 final AuthLoginType loginType){
+                                                 final AuthLoginType loginType, final String token){
         user_profile profile = new user_profile();
-        profile.setGuid(UUID.fromString(userRecord.getUid()));
+        profile.setGuid(userRecord.getUid());
         profile.setLogin_type(loginType);
+        profile.setAccess_token(token);
         profile.setUsername(userRecord.getDisplayName());
-        profile.setCreated_date(Instant.now());
-        profile.setUpdated_date(Instant.now());
+        profile.setCreated_date(Instant.now().toString());
+        profile.setUpdated_date(Instant.now().toString());
         return new AuthUserProfile(profile);
     }
 }

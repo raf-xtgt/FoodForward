@@ -21,9 +21,8 @@ class ApiService {
     }
   }
 
-    static Future<String> postMethod(Map<String, dynamic> requestBody) async {
+    static Future<String> postMethod(Map<String, dynamic> requestBody, final String url) async {
     try {
-      const String url = "$baseApiUrl/upload-image/create";
       final response = await http.post(
         Uri.parse(url),
         headers: <String, String>{

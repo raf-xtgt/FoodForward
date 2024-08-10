@@ -36,7 +36,7 @@ public class GoogleAuthService {
 
                 userRecord = FirebaseAuth.getInstance().createUser(request);
                 log.info("User signed up successfully with UID: " + userRecord.getUid());
-                return Optional.of(new AuthHelperService().constructUserProfile(userRecord, AuthLoginType.GOOGLE_LOGIN));
+                return Optional.of(new AuthHelperService().constructUserProfile(userRecord, AuthLoginType.GOOGLE_LOGIN, ""));
 
             }
         } catch (Exception e) {
