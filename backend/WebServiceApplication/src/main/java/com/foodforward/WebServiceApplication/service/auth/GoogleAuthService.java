@@ -20,7 +20,7 @@ public class GoogleAuthService {
     public Optional<AuthUserProfile> signUpWithGoogle(final AuthDto authDto){
         try {
             // Verify the Google ID token
-            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(authDto.getGoogleIdToken());
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(authDto.getUserId());
             String uid = decodedToken.getUid();
 
             // Check if user already exists

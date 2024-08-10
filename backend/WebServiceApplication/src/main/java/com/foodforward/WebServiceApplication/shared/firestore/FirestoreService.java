@@ -9,19 +9,20 @@ import com.google.cloud.firestore.Firestore;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class FirestoreService {
     private static final Log log = LogFactory.getLog(FirestoreService.class);
 
-    public <T> T getDocument(String collectionName, String documentId, Class<T> clazz) throws ExecutionException, InterruptedException {
+    public <T> Map<String, Object> getDocument(String collectionName, String documentId, Class<T> clazz) throws ExecutionException, InterruptedException {
         final Firestore db = new DatabaseConnectionService().getDbConnection();
         DocumentReference docRef = db.collection(collectionName).document(documentId);
         ApiFuture<DocumentSnapshot> future = docRef.get();
         DocumentSnapshot document = future.get();
 
         if (document.exists()) {
-            return document.toObject(clazz);
+            return document.getData();
         } else {
             throw new RuntimeException("Document not found");
         }

@@ -1,12 +1,12 @@
 class AuthDto {
   final String email;
   final String password;
-  final String? googleIdToken;
+  final String? userId;
   
   AuthDto({
     required this.email,
     required this.password,
-    this.googleIdToken
+    this.userId
   });
 
 
@@ -15,7 +15,7 @@ class AuthDto {
     return {
       'email': email,
       'password': password,
-      if (googleIdToken != null) 'googleIdToken': googleIdToken,
+      if (userId != null) 'userId': userId,
     };
   }
 }

@@ -50,14 +50,15 @@ public class AuthController {
         }
     }
 
-    @PostMapping(value ="/login-in/email-and-password", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value ="/login/email-and-password", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StreamingResponseBody> logIn(@RequestBody final AuthDto authDto) {
         final Optional<AuthUserProfile> profileCont = new AuthService().loginWithEmailAndPassword(authDto);
 
         if (profileCont.isPresent()) {
             StreamingResponseBody responseBody = outputStream -> {
                 try {
-                    String jsonResponse = new ObjectMapper().writeValueAsString(profileCont.get());
+                    ApiResponse<AuthUserProfile> apiResponse = new ApiResponse<>(200, profileCont.get());
+                    String jsonResponse = new ObjectMapper().writeValueAsString(apiResponse);
                     outputStream.write(jsonResponse.getBytes());
                 } catch (IOException e) {
                     throw new RuntimeException("Error streaming response", e);
@@ -68,11 +69,12 @@ public class AuthController {
                     .body(responseBody);
         } else {
             StreamingResponseBody errorResponse = outputStream -> {
-                String errorMessage = "Login via password and email failed";
-                outputStream.write(errorMessage.getBytes());
+                ApiResponse<String> apiResponse = new ApiResponse<>(500, "Login via login and email failed");
+                String jsonResponse = new ObjectMapper().writeValueAsString(apiResponse);
+                outputStream.write(jsonResponse.getBytes());
             };
-            return ResponseEntity.internalServerError()
-                    .contentType(MediaType.TEXT_PLAIN)
+            return ResponseEntity.status(500)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .body(errorResponse);
         }
     }

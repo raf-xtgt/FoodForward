@@ -12,5 +12,11 @@ class SignUpService {
       http.Response result = await ApiService.postMethod(authDto.toJson(), url);
       return result;
   }
+
+  static Future<http.Response> logIn(final AuthDto authDto ) async {
+      const String url =  "${Config.baseApiUrl}/auth/login/email-and-password";
+      http.Response result = await ApiService.postMethod(authDto.toJson(), url);
+      return result;
+  }
   
 }

@@ -3,24 +3,35 @@ package com.foodforward.WebServiceApplication.model.dto;
 public class AuthDto {
     private final String email;
     private final String password;
-    private final String googleIdToken;
+    private final String userId;
 
-    public AuthDto(String email, String password, String googleIdToken) {
+    public AuthDto(String email, String password, String googleIdToken, String userId) {
         this.email = email;
         this.password = password;
-        this.googleIdToken = googleIdToken;
+        this.userId = userId;
+    }
+
+    public AuthDto(String email, String password, String accessToken) {
+        this.email = email;
+        this.password = password;
+        this.userId = accessToken;
     }
 
     public AuthDto(String email, String password) {
         this.email = email;
         this.password = password;
-        this.googleIdToken = null;
+        this.userId = null;
     }
 
-    public AuthDto() {
+    public AuthDto(String accessToken) {
+        this.userId = accessToken;
         this.email = null;
         this.password = null;
-        this.googleIdToken = null;
+    }
+    public AuthDto() {
+        this.userId = null;
+        this.email = null;
+        this.password = null;
     }
 
     public String getEmail() {
@@ -31,7 +42,7 @@ public class AuthDto {
         return password;
     }
 
-    public String getGoogleIdToken() {
-        return googleIdToken;
+    public String getUserId() {
+        return userId;
     }
 }

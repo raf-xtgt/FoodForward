@@ -7,8 +7,8 @@ import 'package:food_forward_app/screens/receipt-capture/receipt-capture-screen.
 import 'dart:async';
 
 import 'package:camera/camera.dart';
-class MyHomePageState extends State<MyHomePage> {
 
+class MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0; // Track the index of the selected tab
   CameraDescription? cam; // Mark this as nullable because it's set asynchronously
 
@@ -43,6 +43,11 @@ class MyHomePageState extends State<MyHomePage> {
     return cameras.first;
   }
 
+  void _navigateToProfile() {
+    setState(() {
+      _selectedIndex = 2; // Change the index to the Profile screen's index
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +55,12 @@ class MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: _navigateToProfile,
+          ),
+        ],
       ),
       body: cam == null
           ? const Center(child: CircularProgressIndicator()) // Show loading spinner until camera is initialized
