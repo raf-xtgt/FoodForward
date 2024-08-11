@@ -9,8 +9,8 @@ public class ocr_processing_queue {
     private String descr;
     private String created_by_id;
     private String updated_by_id;
-    private Instant created_date;
-    private Instant updated_date;
+    private String created_date;
+    private String updated_date;
     private static String schemaAlias = "ocr_processing_queue";
 
     public String getGuid() {
@@ -69,19 +69,19 @@ public class ocr_processing_queue {
         this.updated_by_id = updated_by_id;
     }
 
-    public Instant getCreated_date() {
+    public String getCreated_date() {
         return created_date;
     }
 
-    public void setCreated_date(Instant created_date) {
+    public void setCreated_date(String created_date) {
         this.created_date = created_date;
     }
 
-    public Instant getUpdated_date() {
+    public String getUpdated_date() {
         return updated_date;
     }
 
-    public void setUpdated_date(Instant updated_date) {
+    public void setUpdated_date(String updated_date) {
         this.updated_date = updated_date;
     }
 

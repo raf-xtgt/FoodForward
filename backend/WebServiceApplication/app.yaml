@@ -1,0 +1,6 @@
+runtime: java17  # Ensure your JDK version matches
+instance_class: F1  # Choose instance class based on your requirements
+
+env_variables:
+  SPRING_PROFILES_ACTIVE: prod
+  # Add any additional environment variables here

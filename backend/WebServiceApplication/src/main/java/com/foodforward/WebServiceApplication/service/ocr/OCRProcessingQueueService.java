@@ -13,6 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -75,8 +76,8 @@ public class OCRProcessingQueueService {
         ocrQueue.setFile_ref_guid(ref.getGuid());
         ocrQueue.setFile_name(ref.getFile_name());
         ocrQueue.setFile_url(ref.getFile_url());
-        ocrQueue.setCreated_date(Instant.now());
-        ocrQueue.setUpdated_date(Instant.now());
+        ocrQueue.setCreated_date(Instant.now().toString());
+        ocrQueue.setUpdated_date(Instant.now().toString());
         ocrQueue.setCreated_by_id(ref.getCreated_by_user_guid());
         ocrQueue.setUpdated_by_id(ref.getUpdated_by_user_guid());
         return new OCRProcessingQueue(ocrQueue);
