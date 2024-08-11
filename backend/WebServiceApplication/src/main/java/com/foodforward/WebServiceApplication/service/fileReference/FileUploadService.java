@@ -30,21 +30,24 @@ public class FileUploadService {
     }
 
     private FileStorageRef constructFileStorageRef(final String fileName,
-                                                   final String fileUrl){
+                                                   final String fileUrl,
+                                                   final String userId){
         file_storage_ref reference = new file_storage_ref();
         reference.setGuid(UUID.randomUUID());
         reference.setFile_name(fileName);
         reference.setFile_url(fileUrl);
         reference.setCreated_date(Instant.now());
         reference.setUpdated_date(Instant.now());
+        reference.setCreated_by_user_guid(userId);
+        reference.setUpdated_by_user_guid(userId);
         return new FileStorageRef(reference);
     }
 
-    public void uploadMultiFiles(final MultipartFile[] files){
-        Arrays.stream(files).forEach(this::uploadFile);
+    public void uploadMultiFiles(final MultipartFile[] files, final String userId){
+        Arrays.stream(files).forEach(f -> uploadFile(f, userId));
     }
 
-    public void uploadFile(final MultipartFile file){
+    public void uploadFile(final MultipartFile file, final String userId){
 
         try{
             // upload the file to a custom bucket
@@ -61,7 +64,7 @@ public class FileUploadService {
 
             // Return the public URL to the file
             String fileUrl = blob.getMediaLink();
-            final FileStorageRef ref = constructFileStorageRef(fileName, fileUrl);
+            final FileStorageRef ref = constructFileStorageRef(fileName, fileUrl, userId);
             createReference(ref);
             // using a scheduler pass the file to an ocr and store the result in a queue table.
             // using another scheduler process the queue table to create the recipient document hdr/line and history

@@ -16,9 +16,11 @@ public class FileUploadController {
         return "Success";
     }
 
-    @PostMapping(value ="/multi", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String multiImageUpload (@RequestParam final MultipartFile[] files){
-        new FileUploadService().uploadMultiFiles(files);
+    @PostMapping(value ="/multi/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String multiImageUpload
+            (@RequestParam final MultipartFile[] files,
+             @PathVariable final String userId){
+        new FileUploadService().uploadMultiFiles(files, userId);
         return "Success";
     }
 }

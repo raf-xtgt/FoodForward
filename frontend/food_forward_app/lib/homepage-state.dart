@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_forward_app/homepage.dart';
 import 'package:food_forward_app/screens/home/home-screen.dart';
 import 'package:food_forward_app/components/bottom-navigation/bottom-navigation.dart';
+import 'package:food_forward_app/screens/profile/profile-screen.dart';
 import 'package:food_forward_app/screens/receipt-capture/receipt-capture-screen.dart';
 import 'dart:async';
 
@@ -43,10 +44,13 @@ class MyHomePageState extends State<MyHomePage> {
     return cameras.first;
   }
 
-  void _navigateToProfile() {
-    setState(() {
-      _selectedIndex = 2; // Change the index to the Profile screen's index
-    });
+  void _navigateToProfile() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ProfileScreen(title: 'FoodForward'),
+      ),
+    );
+
   }
 
   @override
