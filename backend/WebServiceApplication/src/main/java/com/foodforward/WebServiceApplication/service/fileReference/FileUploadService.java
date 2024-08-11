@@ -2,7 +2,9 @@ package com.foodforward.WebServiceApplication.service.fileReference;
 
 import com.foodforward.WebServiceApplication.databaseConnection.DatabaseConnectionService;
 import com.foodforward.WebServiceApplication.model.container.fileReference.FileStorageRef;
+import com.foodforward.WebServiceApplication.model.container.ocr.OCRProcessingQueue;
 import com.foodforward.WebServiceApplication.model.databaseSchema.fileReference.file_storage_ref;
+import com.foodforward.WebServiceApplication.service.ocr.OCRProcessingQueueService;
 import com.foodforward.WebServiceApplication.shared.constants.Config;
 import com.foodforward.WebServiceApplication.shared.fileUpload.FileUploadUtils;
 import com.google.cloud.firestore.Firestore;
@@ -33,7 +35,7 @@ public class FileUploadService {
                                                    final String fileUrl,
                                                    final String userId){
         file_storage_ref reference = new file_storage_ref();
-        reference.setGuid(UUID.randomUUID());
+        reference.setGuid(UUID.randomUUID().toString());
         reference.setFile_name(fileName);
         reference.setFile_url(fileUrl);
         reference.setCreated_date(Instant.now());
@@ -65,7 +67,9 @@ public class FileUploadService {
             // Return the public URL to the file
             String fileUrl = blob.getMediaLink();
             final FileStorageRef ref = constructFileStorageRef(fileName, fileUrl, userId);
+            final OCRProcessingQueue ocrQueue = new OCRProcessingQueueService().constructOCRQueueFromStorageRef(ref);
             createReference(ref);
+            new OCRProcessingQueueService().createOcrQueue(ocrQueue);
             // using a scheduler pass the file to an ocr and store the result in a queue table.
             // using another scheduler process the queue table to create the recipient document hdr/line and history
         }
