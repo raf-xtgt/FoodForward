@@ -1,4 +1,4 @@
-package com.foodforward.WebServiceApplication.processor.scheduler;
+package com.foodforward.WebServiceApplication.processor.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;

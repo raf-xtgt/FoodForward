@@ -69,13 +69,14 @@ public class OCRProcessingQueueService {
         }
     }
 
-    public OCRProcessingQueue constructOCRQueueFromStorageRef(final FileStorageRef fileStorageRef){
+    public OCRProcessingQueue constructOCRQueueFromStorageRef(final FileStorageRef fileStorageRef, final String imgString){
         final file_storage_ref ref = fileStorageRef.getFile_storage_ref();
         ocr_processing_queue ocrQueue = new ocr_processing_queue();
         ocrQueue.setGuid(UUID.randomUUID().toString());
         ocrQueue.setFile_ref_guid(ref.getGuid());
         ocrQueue.setFile_name(ref.getFile_name());
         ocrQueue.setFile_url(ref.getFile_url());
+        ocrQueue.setBase64(imgString);
         ocrQueue.setCreated_date(Instant.now().toString());
         ocrQueue.setUpdated_date(Instant.now().toString());
         ocrQueue.setCreated_by_id(ref.getCreated_by_user_guid());

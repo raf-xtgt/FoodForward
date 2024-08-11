@@ -1,11 +1,11 @@
 package com.foodforward.WebServiceApplication.model.databaseSchema.ocr;
-import java.time.Instant;
 
 public class ocr_processing_queue {
     private String guid;
     private String file_ref_guid;
     private String file_name;
     private String file_url;
+    private String base64;
     private String descr;
     private String created_by_id;
     private String updated_by_id;
@@ -91,5 +91,13 @@ public class ocr_processing_queue {
 
     public static void setSchemaAlias(String schemaAlias) {
         ocr_processing_queue.schemaAlias = schemaAlias;
+    }
+
+    public String getBase64() {
+        return base64;
+    }
+
+    public void setBase64(String base64) {
+        this.base64 = base64;
     }
 }

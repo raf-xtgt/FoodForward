@@ -15,9 +15,11 @@ import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.Storage;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.UUID;
 
 public class FileUploadService {
@@ -67,7 +69,8 @@ public class FileUploadService {
             // Return the public URL to the file
             String fileUrl = blob.getMediaLink();
             final FileStorageRef ref = constructFileStorageRef(fileName, fileUrl, userId);
-            final OCRProcessingQueue ocrQueue = new OCRProcessingQueueService().constructOCRQueueFromStorageRef(ref);
+            final String base64String = convertFileToBase64(file);
+            final OCRProcessingQueue ocrQueue = new OCRProcessingQueueService().constructOCRQueueFromStorageRef(ref, base64String);
             createReference(ref);
             new OCRProcessingQueueService().createOcrQueue(ocrQueue);
             // using a scheduler pass the file to an ocr and store the result in a queue table.
@@ -81,4 +84,18 @@ public class FileUploadService {
 
     }
 
+    public String convertFileToBase64(final MultipartFile file) {
+        try {
+            // Read the file into a byte array
+            byte[] fileContent = file.getBytes();
+
+            // Encode the byte array to Base64
+            String base64String = Base64.getEncoder().encodeToString(fileContent);
+
+            return base64String;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null; // Return null if there's an error
+        }
+    }
 }

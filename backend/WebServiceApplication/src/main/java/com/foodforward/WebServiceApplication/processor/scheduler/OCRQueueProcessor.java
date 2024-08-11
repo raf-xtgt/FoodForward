@@ -4,39 +4,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodforward.WebServiceApplication.databaseConnection.DatabaseConnectionService;
 import com.foodforward.WebServiceApplication.model.container.ocr.OCRProcessingQueue;
 import com.foodforward.WebServiceApplication.model.databaseSchema.ocr.ocr_processing_queue;
-import com.foodforward.WebServiceApplication.service.fileReference.FileUploadService;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
-import com.google.firebase.cloud.FirestoreClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Component
 public class OCRQueueProcessor {
     private static final Log log = LogFactory.getLog(OCRQueueProcessor.class);
-    private final String API_ENDPOINT = "https://api.gemini.com/ocr";
-    private final String API_KEY = "AIzaSyCnyK16Z8AuD07Lta5sPbRf_vWjKW7Y318";
+    String projectId = "foodforward-3c212";
+    String location = "asia-southeast1";
+    String modelName = "gemini-1.5-flash-001";
+
 
     @Scheduled(fixedRate = 60000) // Run every minute
     public void processReceipts() {
@@ -44,9 +26,9 @@ public class OCRQueueProcessor {
         List<OCRProcessingQueue> ocrQueues =  getQueues();
         try {
             for (OCRProcessingQueue ocrQueue : ocrQueues) {
-                String imageUrl = ocrQueue.getOcr_processing_queue().getFile_url();
+                String imageBase64 = ocrQueue.getOcr_processing_queue().getBase64();
                 // Call method to process the image
-                performOcr(imageUrl);
+                sendToGeminiApi(imageBase64);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,62 +56,14 @@ public class OCRQueueProcessor {
         return queueList;
     }
 
-    public String performOcr(String imageUrl) {
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            HttpGet request = new HttpGet(imageUrl);
-            HttpResponse response = httpClient.execute(request);
-
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                byte[] imageBytes = EntityUtils.toByteArray(entity);
-                sendToGeminiApi(imageBytes);
-            }
-        }
-        catch(Exception e){
-            log.error("Error doing ocr" + e.getMessage());
-        }
-        return "";
-    }
-
-    public void sendToGeminiApi(final byte[] imageBytes){
+    public void sendToGeminiApi(final String base64Image){
         try{
-            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
-            String ocrOutput = sendOCRRequest(base64Image);
+            new MultimodalQuery().multimodalQuery(projectId, location, modelName, base64Image);
         }
         catch(Exception e){
             log.error(e.getMessage());
         }
     }
-
-    private String sendOCRRequest(String base64Image) throws IOException, MalformedURLException {
-        // Create the connection
-        URL url = new URL(API_ENDPOINT);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestProperty("Authorization", "Bearer " + API_KEY);
-        connection.setDoOutput(true);
-
-        // Create the JSON payload
-        String jsonPayload = String.format("{\"image\": \"%s\"}", base64Image);
-
-        // Send the request
-        try (OutputStream os = connection.getOutputStream()) {
-            byte[] input = jsonPayload.getBytes("utf-8");
-            os.write(input, 0, input.length);
-        }
-
-        // Get the response
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
-            StringBuilder response = new StringBuilder();
-            String responseLine;
-            while ((responseLine = br.readLine()) != null) {
-                response.append(responseLine.trim());
-            }
-            return response.toString();
-        }
-    }
-
 
 }
 
