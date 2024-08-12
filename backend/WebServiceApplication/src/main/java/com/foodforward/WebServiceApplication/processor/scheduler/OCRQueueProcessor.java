@@ -2,8 +2,11 @@ package com.foodforward.WebServiceApplication.processor.scheduler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodforward.WebServiceApplication.databaseConnection.DatabaseConnectionService;
+import com.foodforward.WebServiceApplication.model.container.foodStock.FoodStock;
 import com.foodforward.WebServiceApplication.model.container.ocr.OCRProcessingQueue;
 import com.foodforward.WebServiceApplication.model.databaseSchema.ocr.ocr_processing_queue;
+import com.foodforward.WebServiceApplication.model.dto.FoodRetrievalDto;
+import com.foodforward.WebServiceApplication.service.foodStock.FoodStockService;
 import com.foodforward.WebServiceApplication.service.ocr.OCRProcessingQueueService;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
@@ -66,15 +69,16 @@ public class OCRQueueProcessor {
     public void sendToGeminiApi(final OCRProcessingQueue ocrQueue, VertexAI vertexAI){
         try{
             final ocr_processing_queue queue = ocrQueue.getOcr_processing_queue();
+            final String userId = queue.getCreated_by_id();
             final String jsonString = new MultimodalQuery().multimodalQuery(vertexAI, modelName, queue.getBase64());
-            mapAIResppnse(jsonString);
+            mapAIResponse(jsonString, userId);
             new OCRProcessingQueueService().deleteOcrQueue(queue.getGuid());
         }
         catch(Exception e){
             log.error(e.getMessage());
         }
     }
-    public void mapAIResppnse(final String jsonString){
+    public void mapAIResponse(final String jsonString, final String userId){
         try{
             Gson gson = new Gson();
             Type listType = new TypeToken<List<Map<String, Object>>>(){}.getType();
@@ -83,6 +87,9 @@ public class OCRQueueProcessor {
             // Print the list of maps
             for (Map<String, Object> map : list) {
                 System.out.println(map);
+                final FoodRetrievalDto dto = new ObjectMapper().convertValue(map, FoodRetrievalDto.class);
+                final FoodStock stock = new FoodStockService().constructFoodStockFromDto(dto, userId);
+                new FoodStockService().createFoodStock(stock);
             }
         }
         catch(Exception e){
