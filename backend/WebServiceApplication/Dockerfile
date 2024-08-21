@@ -7,6 +7,9 @@ WORKDIR /app
 # Copy the jar file from the target directory to the container
 COPY target/*.jar app.jar
 
+# Copy the serviceKeyAccount.json into the container
+COPY src/main/resources/serviceKeyAccount.json /app/
+
 # Expose port 8080
 EXPOSE 5001
 

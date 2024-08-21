@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  food_forward_app:
+    build:
+      context: ./frontend/food_forward_app
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081" # Adjust the port mapping as needed for your Flutter app
+    # Set up volume mapping if needed to persist data or share files
+    # volumes:
+    #   - ./frontend/food_forward_app:/app
+    depends_on:
+      - food_forward_backend
+
+  food_forward_backend:
+    build:
+      context: ./backend/WebServiceApplication # Update this path to your backend directory
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    # Set up volume mapping if needed to persist data or share files
+    # volumes:
+    #   - ./backend:/app
+
