@@ -1,29 +1,18 @@
+# Use an official Dart base image
 FROM ubuntu:20.04
 
-ENV DEBIAN_FRONTEND="noninteractive"
 ENV JAVA_VERSION="11"
-ENV ANDROID_TOOLS_URL="https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip"
-ENV ANDROID_VERSION="29"
-ENV ANDROID_BUILD_TOOLS_VERSION="29.0.3"
-ENV ANDROID_ARCHITECTURE="x86_64"
-ENV ANDROID_SDK_ROOT="/usr/local/android-sdk"
-ENV FLUTTER_CHANNEL="stable"
-ENV FLUTTER_VERSION="3.0.2"
-ENV GRADLE_VERSION="7.2"
-ENV GRADLE_USER_HOME="/opt/gradle"
-ENV GRADLE_URL="https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip"
-ENV FLUTTER_URL="https://storage.googleapis.com/flutter_infra_release/releases/$FLUTTER_CHANNEL/linux/flutter_linux_$FLUTTER_VERSION-$FLUTTER_CHANNEL.tar.xz"
-ENV FLUTTER_ROOT="/opt/flutter"
-ENV PATH="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/platforms:$FLUTTER_ROOT/bin:$GRADLE_USER_HOME/bin:$PATH"
 
-# Install the necessary dependencies.
-RUN apt-get update \
-  && apt-get install --yes --no-install-recommends \
+# Install necessary packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     openjdk-$JAVA_VERSION-jdk \
+    adb \
     curl \
     unzip \
     sed \
     git \
+    wget \
     bash \
     xz-utils \
     libglvnd0 \
@@ -33,37 +22,41 @@ RUN apt-get update \
     libpulse0 \
     libxcomposite1 \
     libgl1-mesa-glx \
-  && rm -rf /var/lib/{apt,dpkg,cache,log}
+    && rm -rf /var/lib/{apt,dpkg,cache,log}
 
-# Install Gradle.
-RUN curl -L $GRADLE_URL -o gradle-$GRADLE_VERSION-bin.zip \
-  && apt-get install -y unzip \
-  && unzip gradle-$GRADLE_VERSION-bin.zip \
-  && mv gradle-$GRADLE_VERSION $GRADLE_USER_HOME \
-  && rm gradle-$GRADLE_VERSION-bin.zip
+# Install Flutter
+RUN curl -L -o flutter.zip https://storage.googleapis.com/dart-archive/channels/stable/release/3.5.1/sdk/dartsdk-linux-x64-release.zip \
+    && unzip flutter.zip -d /flutter \
+    && rm flutter.zip \
+    && cd /flutter \
+    && flutter doctor
 
-# Install the Android SDK.
-RUN mkdir /root/.android \
-  && touch /root/.android/repositories.cfg \
-  && mkdir -p $ANDROID_SDK_ROOT \
-  && curl -o android_tools.zip $ANDROID_TOOLS_URL \
-  && unzip -qq -d "$ANDROID_SDK_ROOT" android_tools.zip \
-  && rm android_tools.zip \
-  && mv $ANDROID_SDK_ROOT/cmdline-tools $ANDROID_SDK_ROOT/latest \
-  && mkdir -p $ANDROID_SDK_ROOT/cmdline-tools \
-  && mv $ANDROID_SDK_ROOT/latest $ANDROID_SDK_ROOT/cmdline-tools/latest \
-  && yes "y" | sdkmanager "build-tools;$ANDROID_BUILD_TOOLS_VERSION" \
-  && yes "y" | sdkmanager "platforms;android-$ANDROID_VERSION" \
-  && yes "y" | sdkmanager "platform-tools"
+# Add Flutter to PATH
+ENV PATH="/flutter/bin:/flutter/bin/cache/dart-sdk/bin:${PATH}"
 
-# Install Flutter.
-RUN curl -o flutter.tar.xz $FLUTTER_URL \
-  && mkdir -p $FLUTTER_ROOT \
-  && tar xf flutter.tar.xz -C /opt/ \
-  && rm flutter.tar.xz \
-  && git config --global --add safe.directory /opt/flutter \
-  && flutter config --no-analytics \
-  && flutter precache \
-  && yes "y" | flutter doctor --android-licenses \
-  && flutter doctor \
-  && flutter update-packages
+# Set up Android SDK environment variables
+ENV ANDROID_SDK_ROOT=/usr/lib/android-sdk
+ENV PATH="${ANDROID_SDK_ROOT}/tools:${ANDROID_SDK_ROOT}/platform-tools:${PATH}"
+
+# Accept licenses and install Android SDK components
+RUN yes | sdkmanager --licenses \
+    && sdkmanager "platforms;android-30" "build-tools;30.0.3"
+
+# Copy the Flutter project files
+WORKDIR /app
+COPY . .
+
+# Install Flutter dependencies
+RUN flutter pub get
+
+# Build the Flutter app
+RUN flutter build apk --release
+
+# Run adb server
+RUN adb start-server
+
+# Default command to run the app
+CMD ["flutter", "run"]
+
+# Expose ports for ADB
+EXPOSE 5554 5555
