@@ -3,8 +3,8 @@ FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV JAVA_VERSION="11"
 ENV ANDROID_TOOLS_URL="https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip"
-ENV ANDROID_VERSION="29"
-ENV ANDROID_BUILD_TOOLS_VERSION="29.0.3"
+ENV ANDROID_VERSION="33" 
+ENV ANDROID_BUILD_TOOLS_VERSION="33.0.0"
 ENV ANDROID_ARCHITECTURE="x86_64"
 ENV ANDROID_SDK_ROOT="/usr/local/android-sdk"
 ENV FLUTTER_CHANNEL="stable"
@@ -21,6 +21,7 @@ RUN apt-get update \
   && apt-get install --yes --no-install-recommends \
     openjdk-$JAVA_VERSION-jdk \
     curl \
+    adb \
     unzip \
     sed \
     git \
@@ -33,6 +34,18 @@ RUN apt-get update \
     libpulse0 \
     libxcomposite1 \
     libgl1-mesa-glx \
+    qemu-kvm \
+    libvirt-daemon-system \
+    libvirt-dev \
+    bridge-utils \
+    cmake \
+    virt-manager \
+    cmake \
+    ninja-build \
+    gcc \
+    g++ \
+    clang \
+    pkg-config \
   && rm -rf /var/lib/{apt,dpkg,cache,log}
 
 # Install Gradle.
@@ -54,7 +67,9 @@ RUN mkdir /root/.android \
   && mv $ANDROID_SDK_ROOT/latest $ANDROID_SDK_ROOT/cmdline-tools/latest \
   && yes "y" | sdkmanager "build-tools;$ANDROID_BUILD_TOOLS_VERSION" \
   && yes "y" | sdkmanager "platforms;android-$ANDROID_VERSION" \
-  && yes "y" | sdkmanager "platform-tools"
+  && yes "y" | sdkmanager "platform-tools" \
+  && yes "y" | sdkmanager "emulator" \
+  && yes "y" | sdkmanager "system-images;android-$ANDROID_VERSION;google_apis;x86_64"
 
 # Install Flutter.
 RUN curl -o flutter.tar.xz $FLUTTER_URL \
@@ -86,8 +101,14 @@ USER flutteruser
 WORKDIR /home/flutteruser
 
 # Copy and install Flutter dependencies
-COPY --chown=flutteruser:flutteruser pubspec.yaml /home/flutteruser/app/pubspec.yaml
+COPY --chown=flutteruser:flutteruser . /home/flutteruser/app
 WORKDIR /home/flutteruser/app
 
 # Install Flutter dependencies
 RUN flutter pub get
+
+# # Expose the default Flutter port
+# EXPOSE 8000
+
+# # Start adb server and run the Flutter app
+# CMD adb start-server && adb connect $ADB_HOST:5555 && flutter run
