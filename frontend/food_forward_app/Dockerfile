@@ -46,6 +46,17 @@ RUN apt-get update \
     g++ \
     clang \
     pkg-config \
+    libgtk-3-dev \         
+    liblzma-dev \          
+    libcurl4-openssl-dev \  
+    libssl-dev \            
+    libjsoncpp-dev \       
+    libsqlite3-dev \         
+    libx11-dev \             
+    libxcb1-dev \           
+    libxrandr-dev \
+    libsecret-1-dev \ 
+    libjsoncpp-dev \           
   && rm -rf /var/lib/{apt,dpkg,cache,log}
 
 # Install Gradle.
