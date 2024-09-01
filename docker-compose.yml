@@ -6,12 +6,19 @@ services:
       context: ./frontend/food_forward_app
       dockerfile: Dockerfile
     ports:
-      - "8081:8081" # Adjust the port mapping as needed for your Flutter app
-    # Set up volume mapping if needed to persist data or share files
-    # volumes:
-    #   - ./frontend/food_forward_app:/app
+      - "8081:8081" # Adjust the port mapping as neede d for your Flutter app
     depends_on:
+      - emulator
       - food_forward_backend
+
+  emulator:
+      image: us-docker.pkg.dev/android-emulator-268719/images/30-google-x64:30.1.2
+      expose:
+         - 8554/tcp
+         - 5555/tcp
+      devices:
+         - '/dev/kvm:/dev/kvm'
+
 
   food_forward_backend:
     build:
@@ -19,7 +26,4 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5001:5001"
-    # Set up volume mapping if needed to persist data or share files
-    # volumes:
-    #   - ./backend:/app
-
+    

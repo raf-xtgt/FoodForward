@@ -102,6 +102,10 @@ RUN flutter precache \
 ENV PUB_CACHE="/home/flutteruser/.pub-cache"
 ENV FLUTTER_ROOT="/opt/flutter"
 
+# Ensure Gradle directories exist and are writable
+RUN mkdir -p /opt/gradle/wrapper/dists \
+    && chown -R flutteruser:flutteruser /opt/gradle
+
 # Make sure the non-root user owns the relevant directories
 RUN chown -R flutteruser:flutteruser $FLUTTER_ROOT \
   && mkdir -p /home/flutteruser/.pub-cache \
@@ -123,3 +127,10 @@ RUN flutter pub get
 
 # # Start adb server and run the Flutter app
 # CMD adb start-server && adb connect $ADB_HOST:5555 && flutter run
+
+# Expose necessary ports for ADB connection
+EXPOSE 5555
+EXPOSE 5037
+
+# Start adb server and connect to host machine's ADB server
+CMD adb start-server && adb connect 127.0.0.1:5555 && flutter run
