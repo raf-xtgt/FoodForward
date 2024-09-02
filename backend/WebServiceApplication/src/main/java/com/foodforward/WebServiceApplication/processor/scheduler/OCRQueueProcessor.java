@@ -31,7 +31,7 @@ public class OCRQueueProcessor {
     String modelName = "gemini-1.5-flash-001";
     VertexAI vertexAI = new VertexAI(projectId, location);
 
-    @Scheduled(fixedRate = 60000) // Run every minute
+    //@Scheduled(fixedRate = 60000) // Run every minute
     public void processReceipts() {
 
         System.out.println("Processing receipts at: " + System.currentTimeMillis());
