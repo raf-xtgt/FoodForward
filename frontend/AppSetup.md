@@ -42,6 +42,17 @@ docker run --network="host" -it --rm --name food-forward-container food-forward-
 docker ps
 ```
 
+## List all active and inactive containers
+```
+docker ps -a
+```
+
+## Start an existing container
+```
+docker start <container_id_or_name>
+```
+
+
 ## Stop the container
 ```
 docker stop <container_id_or_name>
