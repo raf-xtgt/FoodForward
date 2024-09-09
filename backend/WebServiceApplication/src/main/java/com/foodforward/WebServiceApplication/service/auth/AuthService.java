@@ -1,16 +1,11 @@
 package com.foodforward.WebServiceApplication.service.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.foodforward.WebServiceApplication.databaseConnection.DatabaseConnectionService;
 import com.foodforward.WebServiceApplication.model.container.auth.AuthLoginType;
 import com.foodforward.WebServiceApplication.model.container.auth.AuthUserProfile;
 import com.foodforward.WebServiceApplication.model.databaseSchema.auth.user_profile;
 import com.foodforward.WebServiceApplication.model.dto.AuthDto;
 import com.foodforward.WebServiceApplication.dao.AuthRepository;
 import com.foodforward.WebServiceApplication.service.auth.helper.AuthHelperService;
-import com.foodforward.WebServiceApplication.shared.firestore.FirestoreService;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.SetOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
@@ -18,11 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class AuthService {
@@ -35,11 +26,6 @@ public class AuthService {
         log.info("Successfully created profile");
     }
     public void updateUserProfile(final AuthUserProfile container){
-//        final Firestore db = new DatabaseConnectionService().getDbConnection();
-//        db.collection(user_profile.getSchemaAlias())
-//                .document(container.getUser_profile().getGuid())
-//                .set(container, SetOptions.merge());
-
         authDao.save(container.getUser_profile());
         log.info("Successfully created profile");
     }
@@ -84,8 +70,6 @@ public class AuthService {
 
     public Optional<AuthUserProfile> getUserProfile(String userId){
         try{
-//            final Map<String, Object> mappedDoc = new FirestoreService().getDocument(user_profile.getSchemaAlias(), userId, user_profile.class);
-//            final AuthUserProfile profile = new ObjectMapper().convertValue(mappedDoc, AuthUserProfile.class);
             final Optional<user_profile> userProfile = getProfileById(userId);
             if(userProfile.isPresent()){
                 return Optional.of(new AuthUserProfile(userProfile.get()));

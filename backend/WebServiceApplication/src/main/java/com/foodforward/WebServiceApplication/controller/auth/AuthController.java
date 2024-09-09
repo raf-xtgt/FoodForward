@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodforward.WebServiceApplication.model.container.auth.AuthUserProfile;
 import com.foodforward.WebServiceApplication.model.dto.AuthDto;
 import com.foodforward.WebServiceApplication.service.auth.AuthService;
-import com.foodforward.WebServiceApplication.service.test.TestService;
 import com.foodforward.WebServiceApplication.shared.apiResponse.model.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

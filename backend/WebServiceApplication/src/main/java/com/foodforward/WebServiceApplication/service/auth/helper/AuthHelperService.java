@@ -6,7 +6,6 @@ import com.foodforward.WebServiceApplication.model.databaseSchema.auth.user_prof
 import com.google.firebase.auth.UserRecord;
 
 import java.time.Instant;
-import java.util.Optional;
 import java.util.UUID;
 
 public class AuthHelperService {
