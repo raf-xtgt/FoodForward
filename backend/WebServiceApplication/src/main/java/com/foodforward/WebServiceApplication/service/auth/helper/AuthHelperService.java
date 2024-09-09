@@ -6,12 +6,15 @@ import com.foodforward.WebServiceApplication.model.databaseSchema.auth.user_prof
 import com.google.firebase.auth.UserRecord;
 
 import java.time.Instant;
+import java.util.Optional;
+import java.util.UUID;
 
 public class AuthHelperService {
     public AuthUserProfile constructUserProfile(final UserRecord userRecord,
                                                  final AuthLoginType loginType, final String token){
         user_profile profile = new user_profile();
-        profile.setGuid(userRecord.getUid());
+        profile.setGuid(UUID.randomUUID().toString());
+        profile.setFirebase_id(userRecord.getUid());
         profile.setLogin_type(loginType);
         profile.setAccess_token(token);
         profile.setUsername(userRecord.getDisplayName());

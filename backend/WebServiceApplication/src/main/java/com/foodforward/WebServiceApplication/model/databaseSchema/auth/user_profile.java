@@ -1,20 +1,26 @@
 package com.foodforward.WebServiceApplication.model.databaseSchema.auth;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import com.foodforward.WebServiceApplication.model.container.auth.AuthLoginType;
 
-
+@Entity
 public class user_profile {
+    @Id
     private String guid;
+    private String firebase_id;
     private String username;
+    @Column(columnDefinition = "TEXT")  // Specify the column type as TEXT
     private String access_token;
     private AuthLoginType login_type;
     private String created_date;
     private String updated_date;
     private static String schemaAlias = "user_profile";
 
-    public user_profile(String guid, String username, String access_token, AuthLoginType login_type,
+    public user_profile(String guid, String firebase_id, String username, String access_token, AuthLoginType login_type,
                         String created_date, String updated_date) {
         this.guid = guid;
+        this.firebase_id = firebase_id;
         this.username = username;
         this.access_token = access_token;
         this.login_type = login_type;
@@ -24,6 +30,7 @@ public class user_profile {
 
     public user_profile() {
         this.guid = null;
+        this.firebase_id = null;
         this.username = null;
         this.access_token = null;
         this.login_type = null;
@@ -85,5 +92,13 @@ public class user_profile {
 
     public static void setSchemaAlias(String schemaAlias) {
         user_profile.schemaAlias = schemaAlias;
+    }
+
+    public String getFirebase_id() {
+        return firebase_id;
+    }
+
+    public void setFirebase_id(String firebase_id) {
+        this.firebase_id = firebase_id;
     }
 }

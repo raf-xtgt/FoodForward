@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodforward.WebServiceApplication.model.container.auth.AuthUserProfile;
 import com.foodforward.WebServiceApplication.model.dto.AuthDto;
 import com.foodforward.WebServiceApplication.service.auth.AuthService;
+import com.foodforward.WebServiceApplication.service.test.TestService;
 import com.foodforward.WebServiceApplication.shared.apiResponse.model.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,9 +23,12 @@ import java.util.Optional;
 @RequestMapping(value = { "food-forward/auth" })
 public class AuthController {
 
+    @Autowired
+    private AuthService authService;
+
     @PostMapping(value ="/sign-in/email-and-password", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StreamingResponseBody> signIn(@RequestBody final AuthDto authDto) {
-        final Optional<AuthUserProfile> profileCont = new AuthService().signUpWithEmailAndPassword(authDto);
+        final Optional<AuthUserProfile> profileCont = authService.signUpWithEmailAndPassword(authDto);
 
         if (profileCont.isPresent()) {
             StreamingResponseBody responseBody = outputStream -> {
@@ -52,7 +57,7 @@ public class AuthController {
 
     @PostMapping(value ="/login/email-and-password", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StreamingResponseBody> logIn(@RequestBody final AuthDto authDto) {
-        final Optional<AuthUserProfile> profileCont = new AuthService().loginWithEmailAndPassword(authDto);
+        final Optional<AuthUserProfile> profileCont = authService.loginWithEmailAndPassword(authDto);
 
         if (profileCont.isPresent()) {
             StreamingResponseBody responseBody = outputStream -> {

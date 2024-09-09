@@ -6,6 +6,7 @@ import com.foodforward.WebServiceApplication.model.container.auth.AuthLoginType;
 import com.foodforward.WebServiceApplication.model.container.auth.AuthUserProfile;
 import com.foodforward.WebServiceApplication.model.databaseSchema.auth.user_profile;
 import com.foodforward.WebServiceApplication.model.dto.AuthDto;
+import com.foodforward.WebServiceApplication.dao.AuthRepository;
 import com.foodforward.WebServiceApplication.service.auth.helper.AuthHelperService;
 import com.foodforward.WebServiceApplication.shared.firestore.FirestoreService;
 import com.google.cloud.firestore.Firestore;
@@ -15,25 +16,31 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
+@Service
 public class AuthService {
+    @Autowired
+    private AuthRepository authDao;
     private static final Log log = LogFactory.getLog(AuthService.class);
 
     public void createUserProfile(final AuthUserProfile container){
-        final Firestore db = new DatabaseConnectionService().getDbConnection();
-        db.collection(user_profile.getSchemaAlias())
-                .document(container.getUser_profile().getGuid().toString()).set(container);
+        authDao.save(container.getUser_profile());
         log.info("Successfully created profile");
     }
     public void updateUserProfile(final AuthUserProfile container){
-        final Firestore db = new DatabaseConnectionService().getDbConnection();
-        db.collection(user_profile.getSchemaAlias())
-                .document(container.getUser_profile().getGuid())
-                .set(container, SetOptions.merge());
+//        final Firestore db = new DatabaseConnectionService().getDbConnection();
+//        db.collection(user_profile.getSchemaAlias())
+//                .document(container.getUser_profile().getGuid())
+//                .set(container, SetOptions.merge());
 
+        authDao.save(container.getUser_profile());
         log.info("Successfully created profile");
     }
 
@@ -77,9 +84,15 @@ public class AuthService {
 
     public Optional<AuthUserProfile> getUserProfile(String userId){
         try{
-            final Map<String, Object> mappedDoc = new FirestoreService().getDocument(user_profile.getSchemaAlias(), userId, user_profile.class);
-            final AuthUserProfile profile = new ObjectMapper().convertValue(mappedDoc, AuthUserProfile.class);
-            return Optional.of(profile);
+//            final Map<String, Object> mappedDoc = new FirestoreService().getDocument(user_profile.getSchemaAlias(), userId, user_profile.class);
+//            final AuthUserProfile profile = new ObjectMapper().convertValue(mappedDoc, AuthUserProfile.class);
+            final Optional<user_profile> userProfile = authDao.findById(UUID.fromString(userId));
+            if(userProfile.isPresent()){
+                return Optional.of(new AuthUserProfile(userProfile.get()));
+            }
+            else{
+                return Optional.empty();
+            }
         }
         catch(Exception e){
             log.error(e.getMessage());
@@ -88,6 +101,11 @@ public class AuthService {
         return Optional.empty();
 
 
+    }
+
+    public Optional<user_profile> getProfileByFirebaseId(String firebaseId) {
+        // Using the JPQL method
+        return authDao.findProfileByFirebaseId(firebaseId).stream().findFirst();
     }
 
 
