@@ -86,7 +86,7 @@ public class AuthService {
         try{
 //            final Map<String, Object> mappedDoc = new FirestoreService().getDocument(user_profile.getSchemaAlias(), userId, user_profile.class);
 //            final AuthUserProfile profile = new ObjectMapper().convertValue(mappedDoc, AuthUserProfile.class);
-            final Optional<user_profile> userProfile = authDao.findById(UUID.fromString(userId));
+            final Optional<user_profile> userProfile = getProfileById(userId);
             if(userProfile.isPresent()){
                 return Optional.of(new AuthUserProfile(userProfile.get()));
             }
@@ -106,6 +106,11 @@ public class AuthService {
     public Optional<user_profile> getProfileByFirebaseId(String firebaseId) {
         // Using the JPQL method
         return authDao.findProfileByFirebaseId(firebaseId).stream().findFirst();
+    }
+
+    public Optional<user_profile> getProfileById(String userid) {
+        // Using the JPQL method
+        return authDao.findProfileById(userid).stream().findFirst();
     }
 
 

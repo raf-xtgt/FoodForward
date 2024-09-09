@@ -18,4 +18,7 @@ public interface AuthRepository extends JpaRepository<user_profile, UUID> {
     @Query("SELECT u FROM user_profile u WHERE u.firebase_id = :firebaseId")
     List<user_profile> findProfileByFirebaseId(@Param("firebaseId") String firebaseId);
 
+    @Query("SELECT u FROM user_profile u WHERE u.guid = :userId")
+    List<user_profile> findProfileById(@Param("userId") String userId);
+
 }
