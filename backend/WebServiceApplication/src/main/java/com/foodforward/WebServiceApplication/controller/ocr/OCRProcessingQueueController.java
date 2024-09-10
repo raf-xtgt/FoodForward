@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodforward.WebServiceApplication.model.container.ocr.OCRProcessingQueue;
 import com.foodforward.WebServiceApplication.service.ocr.OCRProcessingQueueService;
 import com.foodforward.WebServiceApplication.shared.apiResponse.model.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +16,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping(value = { "food-forward/ocr-queue" })
 public class OCRProcessingQueueController {
+    @Autowired
+    private OCRProcessingQueueService ocrService;
 
     @PostMapping(value ="/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StreamingResponseBody> create(@RequestBody final OCRProcessingQueue queueCont) {
-        final Optional<OCRProcessingQueue> cont = new OCRProcessingQueueService().createOcrQueue(queueCont);
+        final Optional<OCRProcessingQueue> cont = ocrService.createOcrQueue(queueCont);
 
         if (cont.isPresent()) {
             StreamingResponseBody responseBody = outputStream -> {
@@ -47,7 +50,7 @@ public class OCRProcessingQueueController {
 
     @PutMapping(value ="/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StreamingResponseBody> update(@RequestBody final OCRProcessingQueue queueCont) {
-        final Optional<OCRProcessingQueue> cont = new OCRProcessingQueueService().updateOcrQueue(queueCont);
+        final Optional<OCRProcessingQueue> cont = ocrService.updateOcrQueue(queueCont);
 
         if (cont.isPresent()) {
             StreamingResponseBody responseBody = outputStream -> {
@@ -76,7 +79,7 @@ public class OCRProcessingQueueController {
 
     @GetMapping(value ="/read/{queueId}")
     public ResponseEntity<StreamingResponseBody> read(@PathVariable final String queueId) {
-        final Optional<OCRProcessingQueue> cont = new OCRProcessingQueueService().getOcrQueue(queueId);
+        final Optional<OCRProcessingQueue> cont = ocrService.getOcrQueue(queueId);
 
         if (cont.isPresent()) {
             StreamingResponseBody responseBody = outputStream -> {
@@ -105,7 +108,7 @@ public class OCRProcessingQueueController {
 
     @DeleteMapping(value ="/delete/{queueId}")
     public ResponseEntity<StreamingResponseBody> delete(@PathVariable final String queueId) {
-        final Optional<String> cont = new OCRProcessingQueueService().deleteOcrQueue(queueId);
+        final Optional<String> cont = ocrService.deleteOcrQueue(queueId);
 
         if (cont.isPresent()) {
             StreamingResponseBody responseBody = outputStream -> {

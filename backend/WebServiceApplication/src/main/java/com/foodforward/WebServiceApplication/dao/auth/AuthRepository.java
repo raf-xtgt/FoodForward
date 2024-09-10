@@ -1,4 +1,4 @@
-package com.foodforward.WebServiceApplication.dao;
+package com.foodforward.WebServiceApplication.dao.auth;
 
 
 import com.foodforward.WebServiceApplication.model.databaseSchema.auth.user_profile;

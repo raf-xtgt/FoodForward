@@ -1,11 +1,18 @@
 package com.foodforward.WebServiceApplication.model.databaseSchema.fileReference;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 import java.time.Instant;
 
+@Entity
 public class file_storage_ref {
+    @Id
     private String guid;
     private String file_name;
-    private String file_url;
+    @Column(columnDefinition = "TEXT")
+    private String file_string;
     private String descr;
     private String created_by_user_guid;
     private String updated_by_user_guid;
@@ -29,12 +36,12 @@ public class file_storage_ref {
         this.file_name = file_name;
     }
 
-    public String getFile_url() {
-        return file_url;
+    public String getFile_string() {
+        return file_string;
     }
 
-    public void setFile_url(String file_url) {
-        this.file_url = file_url;
+    public void setFile_string(String file_string) {
+        this.file_string = file_string;
     }
 
     public String getDescr() {

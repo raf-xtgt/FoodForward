@@ -1,10 +1,16 @@
 package com.foodforward.WebServiceApplication.model.databaseSchema.ocr;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class ocr_processing_queue {
+    @Id
     private String guid;
     private String file_ref_guid;
     private String file_name;
-    private String file_url;
+    @Column(columnDefinition = "TEXT")
     private String base64;
     private String descr;
     private String created_by_id;
@@ -35,14 +41,6 @@ public class ocr_processing_queue {
 
     public void setFile_name(String file_name) {
         this.file_name = file_name;
-    }
-
-    public String getFile_url() {
-        return file_url;
-    }
-
-    public void setFile_url(String file_url) {
-        this.file_url = file_url;
     }
 
     public String getDescr() {

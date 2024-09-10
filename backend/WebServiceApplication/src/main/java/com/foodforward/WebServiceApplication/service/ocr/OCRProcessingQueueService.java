@@ -1,51 +1,40 @@
 package com.foodforward.WebServiceApplication.service.ocr;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.foodforward.WebServiceApplication.databaseConnection.DatabaseConnectionService;
+import com.foodforward.WebServiceApplication.dao.ocr.OcrQueueRepository;
 import com.foodforward.WebServiceApplication.model.container.fileReference.FileStorageRef;
 import com.foodforward.WebServiceApplication.model.container.ocr.OCRProcessingQueue;
 import com.foodforward.WebServiceApplication.model.databaseSchema.fileReference.file_storage_ref;
 import com.foodforward.WebServiceApplication.model.databaseSchema.ocr.ocr_processing_queue;
-import com.foodforward.WebServiceApplication.shared.firestore.FirestoreService;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.SetOptions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+@Service
 public class OCRProcessingQueueService {
+    @Autowired
+    private OcrQueueRepository ocrDao;
     private static final Log log = LogFactory.getLog(OCRProcessingQueueService.class);
 
     public Optional<OCRProcessingQueue>  createOcrQueue(final OCRProcessingQueue ocrQueue){
-        final Firestore db = new DatabaseConnectionService().getDbConnection();
-        db.collection(ocr_processing_queue.getSchemaAlias())
-                .document(ocrQueue.getOcr_processing_queue().getGuid()).set(ocrQueue);
+        ocrDao.save(ocrQueue.getOcr_processing_queue());
         log.info("Successfully created ocr queue");
         return Optional.of(ocrQueue);
     }
 
     public Optional<OCRProcessingQueue>  updateOcrQueue(final OCRProcessingQueue ocrQueue){
-        final Firestore db = new DatabaseConnectionService().getDbConnection();
-        db.collection(ocr_processing_queue.getSchemaAlias())
-                .document(ocrQueue.getOcr_processing_queue().getGuid())
-                .set(ocrQueue, SetOptions.merge());
+        ocrDao.save(ocrQueue.getOcr_processing_queue());
         log.info("Successfully updated ocr queue");
         return Optional.of(ocrQueue);
     }
 
     public Optional<OCRProcessingQueue> getOcrQueue(final String ocrQueueId){
         try{
-            final Firestore db = new DatabaseConnectionService().getDbConnection();
-            final Map<String, Object> mappedDoc = new FirestoreService().getDocument(ocr_processing_queue.getSchemaAlias(),
-                    ocrQueueId, ocr_processing_queue.class);
-            final OCRProcessingQueue queue = new ObjectMapper().convertValue(mappedDoc, OCRProcessingQueue.class);
-            return Optional.of(queue);
-
+            return ocrDao.findByGuid(ocrQueueId).stream().map(OCRProcessingQueue::new).findFirst();
         }
         catch(Exception e){
             log.error(e.getMessage());
@@ -56,10 +45,7 @@ public class OCRProcessingQueueService {
 
     public Optional<String> deleteOcrQueue(final String ocrQueueId){
         try{
-            final Firestore db = new DatabaseConnectionService().getDbConnection();
-            db.collection(ocr_processing_queue.getSchemaAlias())
-                    .document(ocrQueueId)
-                    .delete().get();
+            ocrDao.deleteByGuid(ocrQueueId);
             log.info("Successfully deleted ocr queue");
             return Optional.of(ocrQueueId);
         }
@@ -75,7 +61,6 @@ public class OCRProcessingQueueService {
         ocrQueue.setGuid(UUID.randomUUID().toString());
         ocrQueue.setFile_ref_guid(ref.getGuid());
         ocrQueue.setFile_name(ref.getFile_name());
-        ocrQueue.setFile_url(ref.getFile_url());
         ocrQueue.setBase64(imgString);
         ocrQueue.setCreated_date(Instant.now().toString());
         ocrQueue.setUpdated_date(Instant.now().toString());

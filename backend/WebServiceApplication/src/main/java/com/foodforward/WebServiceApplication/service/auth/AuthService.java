@@ -4,7 +4,7 @@ import com.foodforward.WebServiceApplication.model.container.auth.AuthLoginType;
 import com.foodforward.WebServiceApplication.model.container.auth.AuthUserProfile;
 import com.foodforward.WebServiceApplication.model.databaseSchema.auth.user_profile;
 import com.foodforward.WebServiceApplication.model.dto.AuthDto;
-import com.foodforward.WebServiceApplication.dao.AuthRepository;
+import com.foodforward.WebServiceApplication.dao.auth.AuthRepository;
 import com.foodforward.WebServiceApplication.service.auth.helper.AuthHelperService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
