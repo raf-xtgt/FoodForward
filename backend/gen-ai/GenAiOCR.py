@@ -3,9 +3,11 @@ from io import BytesIO
 from PIL import Image
 import google.generativeai as genai
 import os
+from flask import Flask, request, jsonify
 
 
-genai.configure(api_key="AIzaSyBCDfNTYEDDhlWyv4vcvviSX75W9h2ACV8")
+genai.configure(api_key="KEY")
+app = Flask(__name__)
 
 
 def decode_base64_image(base64_string):
@@ -25,15 +27,27 @@ def display_image(image):
 
 def process_receipt(base64_image):
     image = decode_base64_image(base64_image)
-    display_image(image)
-    process_image(image)
+    # display_image(image)
+    return process_image(image)
 
 
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python script.py <base64_image_string>")
-        sys.exit(1)
+@app.route('/run-gen-ai-ocr', methods=['POST'])
+def run_gen_ai_ocr():
+    # Parse the JSON request payload
+    data = request.get_json()
 
-    base64_image = sys.argv[1]  # Accept base64 string as command-line argument
-    output = process_receipt(base64_image)
-    print(output)
+    # Extract the "inputStr" field from the JSON
+    input_str = data.get('imageStr')
+    print("imageStr " + str(input_str))
+    output = process_receipt(str(input_str))
+
+    # Perform your logic with the input string here
+    # Example: Just return the input string in the response for now
+    result = f"Received input string: {output}"
+
+    # Return the result as a JSON response
+    return jsonify({"result": result})
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)

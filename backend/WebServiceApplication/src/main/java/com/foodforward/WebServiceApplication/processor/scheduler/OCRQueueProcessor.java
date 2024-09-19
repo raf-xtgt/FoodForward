@@ -13,15 +13,24 @@ import com.google.cloud.firestore.*;
 import com.google.cloud.vertexai.VertexAI;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import java.util.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class OCRQueueProcessor {
@@ -30,54 +39,40 @@ public class OCRQueueProcessor {
     String location = "asia-southeast1";
     String modelName = "gemini-1.5-flash-001";
     VertexAI vertexAI = new VertexAI(projectId, location);
+    @Autowired
+    private OCRProcessingQueueService ocrService;
+    private final RestTemplate restTemplate = new RestTemplate();
 
-    //@Scheduled(fixedRate = 60000) // Run every minute
+
+    @Scheduled(fixedRate = 60000) // Run every minute
     public void processReceipts() {
 
         System.out.println("Processing receipts at: " + System.currentTimeMillis());
-        List<OCRProcessingQueue> ocrQueues =  getQueues();
+        List<ocr_processing_queue> ocrQueues = new ArrayList<>() ;
+        if(ocrService.getAllOcrQueues().isPresent()){
+            ocrQueues = ocrService.getAllOcrQueues().get();
+        }
         try {
-            for (OCRProcessingQueue ocrQueue : ocrQueues) {
-                sendToGeminiApi(ocrQueue, vertexAI);
+            for (ocr_processing_queue ocrQueue : ocrQueues) {
+                triggerGenAIOCR(ocrQueue);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public List<OCRProcessingQueue> getQueues(){
-        List<OCRProcessingQueue> queueList = new ArrayList<>();
-        try{
-            final Firestore db = new DatabaseConnectionService().getDbConnection();
-            CollectionReference collection = db.collection(ocr_processing_queue.getSchemaAlias());
-            ApiFuture<QuerySnapshot> snapShot = collection.get();
-            queueList =  snapShot.get().getDocuments().stream()
-                    .map(docToMap -> {
-                        final Map<String, Object> mappedDoc = docToMap.getData();
-                        return  new ObjectMapper().convertValue(mappedDoc, OCRProcessingQueue.class);
+    public void triggerGenAIOCR(final ocr_processing_queue queue){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-                    })
-                    .toList();
-        }
-        catch(Exception e){
-            log.error("Failed to retrieve the queues");
-            e.printStackTrace();
-        }
-        return queueList;
+        // Create the JSON payload
+        String jsonPayload = "{\"imageStr\":\"" + queue.getBase64() + "\"}";
+        // Wrap the payload and headers in an HttpEntity object
+        HttpEntity<String> request = new HttpEntity<>(jsonPayload, headers);
+        String response = restTemplate.postForObject("http://172.17.0.2:5000/run-gen-ai-ocr", request, String.class);
+        System.out.println(response);
     }
 
-    public void sendToGeminiApi(final OCRProcessingQueue ocrQueue, VertexAI vertexAI){
-        try{
-            final ocr_processing_queue queue = ocrQueue.getOcr_processing_queue();
-            final String userId = queue.getCreated_by_id();
-            final String jsonString = new MultimodalQuery().multimodalQuery(vertexAI, modelName, queue.getBase64());
-            mapAIResponse(jsonString, userId);
-            new OCRProcessingQueueService().deleteOcrQueue(queue.getGuid());
-        }
-        catch(Exception e){
-            log.error(e.getMessage());
-        }
-    }
     public void mapAIResponse(final String jsonString, final String userId){
         try{
             Gson gson = new Gson();

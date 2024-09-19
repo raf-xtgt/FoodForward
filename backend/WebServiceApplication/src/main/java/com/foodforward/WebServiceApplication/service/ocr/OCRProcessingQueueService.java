@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,6 +36,18 @@ public class OCRProcessingQueueService {
     public Optional<OCRProcessingQueue> getOcrQueue(final String ocrQueueId){
         try{
             return ocrDao.findByGuid(ocrQueueId).stream().map(OCRProcessingQueue::new).findFirst();
+        }
+        catch(Exception e){
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    public Optional<List<ocr_processing_queue>> getAllOcrQueues(){
+        try{
+            List<ocr_processing_queue> queueList = ocrDao.findAll();
+            return Optional.of(queueList);
         }
         catch(Exception e){
             log.error(e.getMessage());
