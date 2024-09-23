@@ -18,7 +18,7 @@ def decode_base64_image(base64_string):
 
 def process_image(image):
     model = genai.GenerativeModel('gemini-1.5-flash-001')
-    response = model.generate_content(["Can you extract the items given in the image of the receipt and return to me as an array of json objects. Each json object will be for each item.", image])
+    response = model.generate_content(["Can you extract the items given in the image of the receipt and return to me as an array of json objects. Each json object will be for each item. For each item extract the name, quantity, unit and unit_price.", image])
     print(response.text)
     return response.text
 
@@ -38,15 +38,11 @@ def run_gen_ai_ocr():
 
     # Extract the "inputStr" field from the JSON
     input_str = data.get('imageStr')
-    print("imageStr " + str(input_str))
+    # print("imageStr " + str(input_str))
     output = process_receipt(str(input_str))
 
-    # Perform your logic with the input string here
-    # Example: Just return the input string in the response for now
-    result = f"Received input string: {output}"
-
     # Return the result as a JSON response
-    return jsonify({"result": result})
+    return jsonify({"result": output})
 
 
 if __name__ == '__main__':

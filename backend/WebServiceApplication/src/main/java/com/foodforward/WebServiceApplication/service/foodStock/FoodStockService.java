@@ -20,7 +20,7 @@ public class FoodStockService {
         hdr.setGuid(UUID.randomUUID().toString());
         hdr.setName(dto.getName());
         hdr.setQuantity(dto.getQuantity());
-        hdr.setUnit_price(dto.getPricePerUnit());
+//        hdr.setUnit_price(dto.getPricePerUnit());
         hdr.setTxn_amt(dto.getPrice());
         hdr.setCreated_date(Instant.now().toString());
         hdr.setUpdated_date(Instant.now().toString());
