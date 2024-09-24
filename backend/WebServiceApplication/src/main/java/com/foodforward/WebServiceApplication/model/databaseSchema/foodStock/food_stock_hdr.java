@@ -1,6 +1,10 @@
-package com.foodforward.WebServiceApplication.model.databaseSchema.food;
+package com.foodforward.WebServiceApplication.model.databaseSchema.foodStock;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
+@Entity
 public class food_stock_hdr {
+    @Id
     private String guid;
     private String name;
     private String quantity;

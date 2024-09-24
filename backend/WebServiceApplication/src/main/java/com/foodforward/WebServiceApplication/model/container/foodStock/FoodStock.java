@@ -1,5 +1,5 @@
 package com.foodforward.WebServiceApplication.model.container.foodStock;
-import com.foodforward.WebServiceApplication.model.databaseSchema.food.food_stock_hdr;
+import com.foodforward.WebServiceApplication.model.databaseSchema.foodStock.food_stock_hdr;
 
 
 public class FoodStock {
