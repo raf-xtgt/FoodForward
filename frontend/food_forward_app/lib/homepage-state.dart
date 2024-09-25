@@ -20,7 +20,8 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _initializeCamera() async {
-    // Obtain a list of the available cameras on the device.
+    // Obtain a list of the available cameras on
+    // the device.
     final cameras = await availableCameras();
     // Assign the first camera to cam if cameras list is not empty
     if (cameras.isNotEmpty) {

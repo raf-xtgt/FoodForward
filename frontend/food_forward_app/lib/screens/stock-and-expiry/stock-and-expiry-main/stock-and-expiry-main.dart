@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:food_forward_app/api/api-services/services/food-stock-service/food-stock-service.dart';
 
 class StockAndExpiryScreen extends StatefulWidget {
   @override
@@ -7,11 +8,18 @@ class StockAndExpiryScreen extends StatefulWidget {
 }
 
 class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
-  List<FoodItem> items = [
-    FoodItem(name: 'Apple', quantity: '30g', receiptNo: '10003', expiryDate: '30th Sept 2024'),
-    FoodItem(name: 'Chocolate Bar', quantity: '3 units', receiptNo: '10003', expiryDate: '15th Oct 2024'),
-    FoodItem(name: 'Potatoes', quantity: '3 units', receiptNo: '10003', expiryDate: '20th Nov 2024'),
-  ];
+  List<FoodItem> items = [];
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+
+    void _getData() async {
+      print("GET FOOD STOCK HDR");
+      await FoodStockService.getFoodStock();
+    }
+
 
   @override
   Widget build(BuildContext context) {
