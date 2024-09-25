@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:food_forward_app/api/api-services/services/food-stock-service/food-stock-service.dart';
+import 'package:food_forward_app/api/api-services/api-model/db-schema/food-stock-hdr.dart';
 
 class StockAndExpiryScreen extends StatefulWidget {
   @override
@@ -8,7 +9,7 @@ class StockAndExpiryScreen extends StatefulWidget {
 }
 
 class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
-  List<FoodItem> items = [];
+  List<FoodStockHdrSchema> items = [];
   @override
   void initState() {
     super.initState();
@@ -17,7 +18,10 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
 
     void _getData() async {
       print("GET FOOD STOCK HDR");
-      await FoodStockService.getFoodStock();
+      List<FoodStockHdrSchema> fetchedItems = await FoodStockService.getFoodStock();
+      setState(() {
+        items = fetchedItems;  // Update the state with the fetched data
+      });
     }
 
 
@@ -51,7 +55,7 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
                 return Card(
                   child: ListTile(
                     title: Text(items[index].name),
-                    subtitle: Text('Qty: ${items[index].quantity}, Expiry: ${items[index].expiryDate}'),
+                    subtitle: Text('Qty: ${items[index].quantity ?? 'N/A'}, Price: ${items[index].unitPrice ?? 'N/A'}'),
                     trailing: IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () {

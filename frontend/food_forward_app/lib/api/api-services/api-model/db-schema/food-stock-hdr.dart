@@ -38,6 +38,22 @@ class FoodStockHdrSchema {
     };
   }
 
+   // Create a factory constructor to create FoodItem from JSON
+  factory FoodStockHdrSchema.fromJson(Map<String, dynamic> json) {
+    return FoodStockHdrSchema(
+      guid: json['guid'],
+      name: json['name'] ?? 'Unknown',
+      quantity: json['quantity'] ?? 'N/A',
+      unitPrice: json['unit_price'] ?? 'N/A',
+      txnAmt: json['txn_amt'] ?? 'N/A',
+      createdById: json['created_by_id'],
+      updatedById: json['updated_by_id'],
+      createdDate: DateTime.parse(json['created_date']),
+      updatedDate: DateTime.parse(json['updated_date']),
+    );
+  }
+
+
   String formatDate(DateTime date){
     DateFormat dateFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss");
     String formattedDate = dateFormat.format(date);
