@@ -3,7 +3,7 @@ import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw; // PDF library
 import 'package:permission_handler/permission_handler.dart'; // For handling permissions on Android
 import 'dart:io';
-
+import 'package:food_forward_app/screens/stock-and-expiry/stock-and-expiry-edit/stock-and-expiry-edit.dart';
 import 'package:food_forward_app/api/api-services/services/food-stock-service/food-stock-service.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-schema/food-stock-hdr.dart';
 
@@ -216,8 +216,19 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
                       subtitle: Text('Qty: ${item.quantity ?? 'N/A'}, Price: ${item.unitPrice ?? 'N/A'}'),
                       trailing: IconButton(
                         icon: Icon(Icons.edit),
-                        onPressed: () {
-                          // Handle edit
+                        onPressed: () async {
+                          final updatedItem = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => EditStockItemScreen(item: item),
+                            ),
+                          );
+
+                          // Check if the item was updated and update the state
+                          if (updatedItem != null && updatedItem is FoodStockHdrSchema) {
+                            setState(() {
+                              items[index] = updatedItem; // Update the item in the list
+                            });
+                          }
                         },
                       ),
                     ),

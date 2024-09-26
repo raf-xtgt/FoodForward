@@ -14,6 +14,7 @@ public class food_stock_hdr {
     private String updated_by_id;
     private String created_date;
     private String updated_date;
+    private String expiry_date;
     private static String schemaAlias = "food_stock_hdr";
 
     public String getGuid() {
@@ -86,6 +87,14 @@ public class food_stock_hdr {
 
     public void setUpdated_date(String updated_date) {
         this.updated_date = updated_date;
+    }
+
+    public String getExpiry_date() {
+        return expiry_date;
+    }
+
+    public void setExpiry_date(String expiry_date) {
+        this.expiry_date = expiry_date;
     }
 
     public static String getSchemaAlias() {

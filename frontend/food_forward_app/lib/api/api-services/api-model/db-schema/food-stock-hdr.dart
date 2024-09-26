@@ -10,6 +10,8 @@ class FoodStockHdrSchema {
   final String updatedById;
   final DateTime createdDate;
   final DateTime updatedDate;
+  final DateTime expiryDate;
+
 
   FoodStockHdrSchema({
     required this.guid,
@@ -21,6 +23,7 @@ class FoodStockHdrSchema {
     required this.updatedById,
     required this.createdDate,
     required this.updatedDate,
+    required this.expiryDate,
   });
 
   // Convert a FileStorageRef object to a map
@@ -35,6 +38,7 @@ class FoodStockHdrSchema {
       'updated_by_id': updatedById,
       'created_date':  formatDate(createdDate),
       'updated_date': formatDate(updatedDate),
+      'expiry_date': formatDate(expiryDate),
     };
   }
 
@@ -50,6 +54,8 @@ class FoodStockHdrSchema {
       updatedById: json['updated_by_id'],
       createdDate: DateTime.parse(json['created_date']),
       updatedDate: DateTime.parse(json['updated_date']),
+      expiryDate: DateTime.parse(json['updated_date']),
+
     );
   }
 
