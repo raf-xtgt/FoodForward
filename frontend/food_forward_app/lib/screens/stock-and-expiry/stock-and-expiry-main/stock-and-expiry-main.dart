@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:printing/printing.dart';
+import 'package:pdf/widgets.dart' as pw; // PDF library
+import 'package:permission_handler/permission_handler.dart'; // For handling permissions on Android
+import 'dart:io';
 
 import 'package:food_forward_app/api/api-services/services/food-stock-service/food-stock-service.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-schema/food-stock-hdr.dart';
@@ -27,28 +31,87 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
   }
 
   void _getRecipe() async {
-  print("GET RECIPE");
+    print("GET RECIPE");
 
-  List<String> itemNames = selectedItems.map((item) {return item.name;}).toList();
-  String recipeSuggestion = await FoodStockService.getRecipeSuggestion(itemNames);
-  print("Recipe Suggestion: $recipeSuggestion");
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: Text('Recipe Suggestion'),
-        content: Text(recipeSuggestion),
-        actions: [
-          TextButton(
-            child: Text('Close'),
-            onPressed: () => Navigator.of(context).pop(),
+    List<String> itemNames = selectedItems.map((item) {
+      return item.name;
+    }).toList();
+    String recipeSuggestion = await FoodStockService.getRecipeSuggestion(itemNames);
+    print("Recipe Suggestion: $recipeSuggestion");
+    showRecipeDialog(context, recipeSuggestion);
+  }
+
+  void showRecipeDialog(BuildContext context, String recipeContent) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
-        ],
-      );
-    },
-  );
-}
+          title: Text('Recipe Suggestion'),
+          content: Container(
+            height: 400, // Set a height to limit the dialog size
+            width: double.maxFinite,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Text(
+                    recipeContent,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: Text('Print'),
+              onPressed: () async {
+                // Generate and save the PDF
+                await _generateAndSavePdf(recipeContent);
+              },
+            ),
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
+  Future<void> _generateAndSavePdf(String recipeContent) async {
+    // Create a new PDF document
+    final pdf = pw.Document();
+
+    // Add a page to the PDF with the recipe content
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) => pw.Center(
+          child: pw.Text(recipeContent),
+        ),
+      ),
+    );
+
+    // Move to the Downloads folder explicitly (for Android compatibility)
+    Directory? downloadsDirectory = Directory('/storage/emulated/0/Download');
+
+    // Create the file path in the Downloads directory
+    final filePath = '${downloadsDirectory.path}/recipe_suggestion.pdf';
+
+    // Save the PDF file
+    final file = File(filePath);
+    await file.writeAsBytes(await pdf.save());
+
+    // Log the file path and show success message
+    print("PDF saved at: $filePath");
+
+    // Optionally open or share the file after saving it
+  }
 
   // Function to handle card selection and deselection
   void _toggleSelection(FoodStockHdrSchema item) {
@@ -58,6 +121,13 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
       } else {
         selectedItems.add(item); // Select the item
       }
+    });
+  }
+
+  // Function to deselect all items
+  void _deselectAllItems() {
+    setState(() {
+      selectedItems.clear();
     });
   }
 
@@ -90,6 +160,18 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Stock & Expiry'),
+        actions: [
+          // Show deselect all button if any item is selected
+          if (selectedItems.isNotEmpty)
+            IconButton(
+              icon: Icon(Icons.clear_all),
+              onPressed: _deselectAllItems,
+              tooltip: 'Deselect All',
+            ),
+        ],
+      ),
       body: Column(
         children: [
           Padding(
@@ -121,6 +203,15 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
                   child: Card(
                     color: isSelected ? Colors.blue.shade100 : null, // Change color if selected
                     child: ListTile(
+                      leading: isSelected
+                          ? IconButton(
+                              icon: Icon(Icons.close),
+                              onPressed: () {
+                                _toggleSelection(item);
+                              },
+                              tooltip: 'Deselect',
+                            )
+                          : null, // Show cross button on the left if item is selected
                       title: Text(item.name),
                       subtitle: Text('Qty: ${item.quantity ?? 'N/A'}, Price: ${item.unitPrice ?? 'N/A'}'),
                       trailing: IconButton(
