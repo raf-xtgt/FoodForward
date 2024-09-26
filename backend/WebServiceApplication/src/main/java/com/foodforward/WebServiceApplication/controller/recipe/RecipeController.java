@@ -1,13 +1,18 @@
 package com.foodforward.WebServiceApplication.controller.recipe;
 
-import com.foodforward.WebServiceApplication.model.container.fileReference.FileStorageRef;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.foodforward.WebServiceApplication.model.container.foodStock.FoodStock;
 import com.foodforward.WebServiceApplication.model.dto.RecipeDto;
-import com.foodforward.WebServiceApplication.service.fileReference.FileUploadService;
 import com.foodforward.WebServiceApplication.service.recipe.RecipeService;
+import com.foodforward.WebServiceApplication.shared.apiResponse.model.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+
+import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value ={ "food-forward/recipe" })
@@ -16,9 +21,31 @@ public class RecipeController {
     private RecipeService recipeService;
 
     @PostMapping(value ="/get-suggestion", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String create (@RequestBody final RecipeDto dto){
-        recipeService.getRecipe(dto);
-        return "Success";
+    public ResponseEntity<StreamingResponseBody> getSuggestion(@RequestBody final RecipeDto dto) {
+        final Optional<String> cont = recipeService.getRecipe(dto);
+        if (cont.isPresent()) {
+            StreamingResponseBody responseBody = outputStream -> {
+                try {
+                    ApiResponse<String> apiResponse = new ApiResponse<>(200, cont.get());
+                    String jsonResponse = new ObjectMapper().writeValueAsString(apiResponse);
+                    outputStream.write(jsonResponse.getBytes());
+                } catch (IOException e) {
+                    throw new RuntimeException("Error streaming response", e);
+                }
+            };
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(responseBody);
+        } else {
+            StreamingResponseBody errorResponse = outputStream -> {
+                ApiResponse<String> apiResponse = new ApiResponse<>(500, "Recipe suggestion failed");
+                String jsonResponse = new ObjectMapper().writeValueAsString(apiResponse);
+                outputStream.write(jsonResponse.getBytes());
+            };
+            return ResponseEntity.status(500)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(errorResponse);
+        }
     }
 
 }

@@ -56,10 +56,10 @@ def run_gen_ai_ocr():
 def process_recipe_suggestion():
     data = request.get_json()
 
-    if not data or 'items' not in data:
+    if not data or 'itemList' not in data:
         return jsonify({"error": "No items field in request"}), 400
 
-    items = data['items']
+    items = data['itemList']
     print("items: " + str(items))
 
     if not isinstance(items, list) or not all(isinstance(item, str) for item in items):

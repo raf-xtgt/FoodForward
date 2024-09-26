@@ -32,5 +32,37 @@ class FoodStockService {
 
     }
   }
+
+  static Future<String> getRecipeSuggestion(final List<String> itemNames) async {
+    const String url = "${Config.baseApiUrl}/recipe/get-suggestion";
+    print("Recipe suggestion URL: $url");
+
+    try {
+      final itemDto = {
+        "itemList": itemNames
+      };
+      // Convert the itemDto to JSON
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(itemDto),
+      );
+
+      print('Recipe suggestion response: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+        // Assuming the suggestion is stored in the 'suggestion' field
+        String suggestion = jsonResponse['data'] ?? 'No suggestion found';
+        return suggestion;
+      } else {
+        print('Failed to load data. Status code: ${response.statusCode}');
+        return 'Failed to load recipe suggestion. Status code: ${response.statusCode}';
+      }
+    } catch (e) {
+      print('Error fetching recipe suggestion: $e');
+      return 'Error fetching recipe suggestion: $e';
+    }
+  }
   
 }
