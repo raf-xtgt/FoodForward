@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:http_parser/http_parser.dart'; // Needed for MediaType
+import 'package:food_forward_app/api/api-services/shared-utils/api-service.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-schema/food-stock-hdr.dart';
 class FoodStockService {
   
@@ -64,5 +65,14 @@ class FoodStockService {
       return 'Error fetching recipe suggestion: $e';
     }
   }
+
+
+  static Future<http.Response> update(final FoodStockHdrSchema fs ) async {
+      const String url =  "${Config.baseApiUrl}/food-stock/update";
+      http.Response result = await ApiService.putMethod(fs.toJson(), url);
+      return result;
+  }
+
+  
   
 }

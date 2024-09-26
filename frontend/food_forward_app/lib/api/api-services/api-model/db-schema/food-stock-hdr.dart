@@ -29,16 +29,18 @@ class FoodStockHdrSchema {
   // Convert a FileStorageRef object to a map
   Map<String, dynamic> toJson() {
     return {
-      'guid': guid,
-      'name': name,
-      'quantity': quantity,
-      'unit_price': unitPrice,
-      'txn_amt': txnAmt,
-      'created_by_id': createdById,
-      'updated_by_id': updatedById,
-      'created_date':  formatDate(createdDate),
-      'updated_date': formatDate(updatedDate),
-      'expiry_date': formatDate(expiryDate),
+      "food_stock_hdr" :{
+        'guid': guid,
+        'name': name,
+        'quantity': quantity,
+        'unit_price': unitPrice,
+        'txn_amt': txnAmt,
+        'created_by_id': createdById,
+        'updated_by_id': updatedById,
+        'created_date':  formatDate(createdDate),
+        'updated_date': formatDate(updatedDate),
+        'expiry_date': formatDate(expiryDate),
+      }
     };
   }
 

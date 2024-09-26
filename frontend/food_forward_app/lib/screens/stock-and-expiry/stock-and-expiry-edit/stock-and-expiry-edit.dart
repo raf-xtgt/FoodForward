@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:food_forward_app/api/api-services/services/food-stock-service/food-stock-service.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-schema/food-stock-hdr.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class EditStockItemScreen extends StatefulWidget {
   final FoodStockHdrSchema item;
@@ -28,6 +30,7 @@ class _EditStockItemScreenState extends State<EditStockItemScreen> {
     _nameController = TextEditingController(text: widget.item.name);
     _quantityController = TextEditingController(text: widget.item.quantity);
     _unitPriceController = TextEditingController(text: widget.item.unitPrice);
+    _txnAmountController = TextEditingController(text: widget.item.txnAmt);
     String formattedDate = "${widget.item.expiryDate.year.toString().padLeft(4, '0')}-"
         "${widget.item.expiryDate.month.toString().padLeft(2, '0')}-"
         "${widget.item.expiryDate.day.toString().padLeft(2, '0')}";
@@ -43,6 +46,7 @@ class _EditStockItemScreenState extends State<EditStockItemScreen> {
     _quantityController.dispose();
     _unitPriceController.dispose();
     _expirtyDateController.dispose();
+    _txnAmountController.dispose();
     super.dispose();
   }
 
@@ -59,12 +63,15 @@ class _EditStockItemScreenState extends State<EditStockItemScreen> {
         updatedById: widget.item.updatedById,
         createdDate: widget.item.createdDate,
         updatedDate: widget.item.updatedDate,
-        expiryDate: widget.item.expiryDate
+        expiryDate: _expirtyDateController.text.isNotEmpty 
+          ? DateTime.tryParse(_expirtyDateController.text) ?? widget.item.expiryDate 
+          : widget.item.expiryDate,
       );
 
       // Call the service method to update the item
-      bool success = true; // await FoodStockService.updateFoodStock(updatedItem);
-      if (success) {
+      http.Response updateResp = await FoodStockService.update(updatedItem);
+      final Map<String, dynamic> responseBody = json.decode(updateResp.body);
+      if (updateResp.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Item updated successfully')));
         Navigator.of(context).pop(updatedItem); // Return the updated item to the previous screen
       } else {
