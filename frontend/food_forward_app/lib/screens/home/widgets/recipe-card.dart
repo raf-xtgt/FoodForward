@@ -10,10 +10,10 @@ class ReceipeCard extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Icon(Icons.volunteer_activism, size: 48.0, color: Colors.green),
+            Icon(Icons.fastfood, size: 48.0, color: Colors.green),
             const SizedBox(height: 8.0),
             Text(
-              'Donate to NGOs',
+              'Your Recipes',
               style: Theme.of(context).textTheme.labelSmall,
             ),
           ],
