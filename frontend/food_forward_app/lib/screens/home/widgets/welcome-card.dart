@@ -6,7 +6,7 @@ class WelcomeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color(0xFF218DB3), // Set the background color to #218db3
+      color: const Color(0xFF0070b4), // Set the background color to #218db3
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(

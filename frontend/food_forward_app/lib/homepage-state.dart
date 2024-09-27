@@ -8,6 +8,7 @@ import 'dart:async';
 
 import 'package:camera/camera.dart';
 import 'package:food_forward_app/screens/stock-and-expiry/stock-and-expiry-main/stock-and-expiry-main.dart';
+import 'package:food_forward_app/screens/profile/profile-screen.dart';
 
 class MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0; // Track the index of the selected tab
@@ -48,7 +49,7 @@ class MyHomePageState extends State<MyHomePage> {
   void _navigateToProfile() async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => ProfileScreen(title: 'FoodForward'),
+        builder: (context) => const ProfileScreen(),
       ),
     );
 
@@ -77,6 +78,7 @@ class MyHomePageState extends State<MyHomePage> {
                   const HomeScreen(),
                   if (cam != null) ReceiptCaptureScreen(camera: cam!), // Ensure cam is not null before using it
                   StockAndExpiryScreen(),
+                  const ProfileScreen(),
                 ],
               ),
             ),

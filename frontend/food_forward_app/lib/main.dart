@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginScreen(),
         '/signup': (context) => SignupScreen(), // Add your signup screen route here
         '/stock-and-expirty': (context) => StockAndExpiryScreen(),
-        '/profile': (context) => const ProfileScreen(title: 'FoodForward'),
+        '/profile': (context) => const ProfileScreen(),
 
       },
     );
