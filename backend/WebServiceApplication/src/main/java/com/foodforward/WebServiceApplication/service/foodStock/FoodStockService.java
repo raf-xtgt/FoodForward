@@ -1,14 +1,9 @@
 package com.foodforward.WebServiceApplication.service.foodStock;
 
 import com.foodforward.WebServiceApplication.dao.foodStock.FoodStockHdrRepository;
-import com.foodforward.WebServiceApplication.dao.ocr.OcrQueueRepository;
-import com.foodforward.WebServiceApplication.databaseConnection.DatabaseConnectionService;
 import com.foodforward.WebServiceApplication.model.container.foodStock.FoodStock;
-import com.foodforward.WebServiceApplication.model.container.ocr.OCRProcessingQueue;
 import com.foodforward.WebServiceApplication.model.databaseSchema.foodStock.food_stock_hdr;
-import com.foodforward.WebServiceApplication.model.databaseSchema.ocr.ocr_processing_queue;
 import com.foodforward.WebServiceApplication.model.dto.FoodRetrievalDto;
-import com.google.cloud.firestore.Firestore;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

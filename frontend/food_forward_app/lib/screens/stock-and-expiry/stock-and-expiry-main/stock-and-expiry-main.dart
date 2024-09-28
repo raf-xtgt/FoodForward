@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:printing/printing.dart';
+import 'package:food_forward_app/api/api-services/api-model/db-schema/recipe-hdr.dart';
 import 'package:pdf/widgets.dart' as pw; // PDF library
-import 'package:permission_handler/permission_handler.dart'; // For handling permissions on Android
+// For handling permissions on Android
 import 'dart:io';
 import 'package:food_forward_app/screens/stock-and-expiry/stock-and-expiry-edit/stock-and-expiry-edit.dart';
 import 'package:food_forward_app/api/api-services/services/food-stock-service/food-stock-service.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-schema/food-stock-hdr.dart';
+import 'package:food_forward_app/api/api-services/api-model/db-model/RecipeDto.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class StockAndExpiryScreen extends StatefulWidget {
   @override
@@ -15,11 +17,15 @@ class StockAndExpiryScreen extends StatefulWidget {
 class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
   List<FoodStockHdrSchema> items = [];
   List<FoodStockHdrSchema> selectedItems = []; // List to keep track of selected items
+  String recipeText = '';
+  String userId = '';
+
 
   @override
   void initState() {
     super.initState();
     _getData();
+    
   }
 
   void _getData() async {
@@ -38,7 +44,22 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
     }).toList();
     String recipeSuggestion = await FoodStockService.getRecipeSuggestion(itemNames);
     print("Recipe Suggestion: $recipeSuggestion");
+    setState(() {
+      recipeText = recipeSuggestion; // set recipe
+    });
     showRecipeDialog(context, recipeSuggestion);
+  }
+
+  Future<void> _saveRecipe() async {
+    print("SAVE RECIPE");
+    String recipe = recipeText;
+    final FlutterSecureStorage storage = FlutterSecureStorage();
+    final String? userId = await storage.read(key: 'userId');
+    RecipeDto recipeDto = RecipeDto(
+      recipeText: recipe,
+      userId: userId ?? '',
+    );
+    await FoodStockService.saveRecipe(recipeDto);
   }
 
   void showRecipeDialog(BuildContext context, String recipeContent) {
@@ -49,8 +70,8 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          title: Text('Recipe Suggestion'),
-          content: Container(
+          title: const Text('Recipe Suggestion'),
+          content: SizedBox(
             height: 400, // Set a height to limit the dialog size
             width: double.maxFinite,
             child: SingleChildScrollView(
@@ -70,6 +91,13 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
               onPressed: () async {
                 // Generate and save the PDF
                 await _generateAndSavePdf(recipeContent);
+              },
+            ),
+            TextButton(
+              child: Text('Save'),
+              onPressed: () async {
+                // Generate and save the PDF
+                await _saveRecipe();
               },
             ),
             TextButton(
@@ -132,52 +160,16 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
   }
 
   // Function to display selected item data
-  void _showSelectedItems() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Selected Items'),
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: selectedItems.map((item) {
-                return Text('Name: ${item.name}, Qty: ${item.quantity}, Price: ${item.unitPrice}');
-              }).toList(),
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: Text('Close'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Stock & Expiry'),
-        actions: [
-          // Show deselect all button if any item is selected
-          if (selectedItems.isNotEmpty)
-            IconButton(
-              icon: Icon(Icons.clear_all),
-              onPressed: _deselectAllItems,
-              tooltip: 'Deselect All',
-            ),
-        ],
-      ),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Filter by date',
                 suffixIcon: Icon(Icons.date_range),
               ),
@@ -243,8 +235,8 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
       floatingActionButton: selectedItems.isNotEmpty
           ? FloatingActionButton(
               onPressed: _getRecipe,
-              child: Icon(Icons.fastfood),
               tooltip: 'Generate Recipe',
+              child: const Icon(Icons.fastfood),
             )
           : null,
     );

@@ -6,6 +6,10 @@ import 'dart:convert';
 import 'package:http_parser/http_parser.dart'; // Needed for MediaType
 import 'package:food_forward_app/api/api-services/shared-utils/api-service.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-schema/food-stock-hdr.dart';
+import 'package:food_forward_app/api/api-services/api-model/db-schema/recipe-hdr.dart';
+import 'package:food_forward_app/api/api-services/api-model/db-model/RecipeDto.dart';
+
+
 class FoodStockService {
   
   static Future<List<FoodStockHdrSchema>> getFoodStock() async {
@@ -70,6 +74,12 @@ class FoodStockService {
   static Future<http.Response> update(final FoodStockHdrSchema fs ) async {
       const String url =  "${Config.baseApiUrl}/food-stock/update";
       http.Response result = await ApiService.putMethod(fs.toJson(), url);
+      return result;
+  }
+
+   static Future<http.Response> saveRecipe(final RecipeDto recipe ) async {
+      const String url =  "${Config.baseApiUrl}/recipe/save-recipe";
+      http.Response result = await ApiService.postMethod(recipe.toJson(), url);
       return result;
   }
 
