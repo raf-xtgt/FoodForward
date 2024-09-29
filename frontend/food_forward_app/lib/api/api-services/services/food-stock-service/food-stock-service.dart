@@ -77,6 +77,12 @@ class FoodStockService {
       return result;
   }
 
+  static Future<http.Response> delete( String foodStockId ) async {
+      final String url =  "${Config.baseApiUrl}/food-stock/delete/$foodStockId";
+      http.Response result = await ApiService.deleteMethod(url);
+      return result;
+  }
+
    static Future<http.Response> saveRecipe(final RecipeDto recipe ) async {
       const String url =  "${Config.baseApiUrl}/recipe/save-recipe";
       http.Response result = await ApiService.postMethod(recipe.toJson(), url);

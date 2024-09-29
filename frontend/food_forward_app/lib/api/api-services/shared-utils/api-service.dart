@@ -69,4 +69,26 @@ class ApiService {
       );
     }
   }
+
+
+    static Future<http.Response> deleteMethod(final String url) async {
+      try {
+        final response = await http.delete(
+          Uri.parse(url),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+        );
+
+        return response;
+      } catch (e) {
+        return http.Response(
+          jsonEncode({'error': 'Error: $e'}),
+          500,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+        );
+      }
+  }
 }

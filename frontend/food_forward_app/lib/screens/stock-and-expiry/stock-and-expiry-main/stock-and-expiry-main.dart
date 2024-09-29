@@ -56,6 +56,20 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
     showRecipeDialog(context, recipeSuggestion);
   }
 
+  Future<void> _consumeRecipeItems() async {
+    print("CONSUME ITEMS IN RECIPE");
+
+    selectedItems.forEach((item) async {
+      await FoodStockService.delete(item.guid);
+      items.remove(item);
+    });
+    setState(() {
+      items = items; 
+    });
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Consumed recipe items')));
+
+  }
+
   Future<void> _saveRecipe() async {
     print("SAVE RECIPE");
     String recipe = recipeText;
@@ -67,6 +81,8 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
     );
     await FoodStockService.saveRecipe(recipeDto);
   }
+
+  
 
   void showRecipeDialog(BuildContext context, String recipeContent) {
     showDialog(
@@ -85,7 +101,7 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
                 children: [
                   Text(
                     recipeContent,
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ],
               ),
@@ -93,21 +109,28 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
           ),
           actions: [
             TextButton(
-              child: Text('Print'),
+              child: const Text('Print'),
               onPressed: () async {
                 // Generate and save the PDF
                 await _generateAndSavePdf(recipeContent);
               },
             ),
             TextButton(
-              child: Text('Save'),
+              child: const Text('Save'),
               onPressed: () async {
                 // Generate and save the PDF
                 await _saveRecipe();
               },
             ),
             TextButton(
-              child: Text('Close'),
+              child: const Text('Consume'),
+              onPressed: () async {
+                // Generate and save the PDF
+                await _consumeRecipeItems();
+              },
+            ),
+            TextButton(
+              child: const Text('Close'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
