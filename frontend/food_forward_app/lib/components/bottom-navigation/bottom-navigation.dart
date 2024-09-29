@@ -17,6 +17,7 @@ class BottomNavigation extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(50.0), // Apply circular border radius
         child: Container(
+          height: 60, // Adjust the height of the container for better scrolling experience
           decoration: BoxDecoration(
             color: const Color(0xFF218DB3), // Blue background color for the Bottom Navigation Bar
             boxShadow: [
@@ -28,97 +29,87 @@ class BottomNavigation extends StatelessWidget {
               ),
             ],
           ),
-          child: BottomNavigationBar(
-            items: <BottomNavigationBarItem>[
-              _buildBottomNavigationBarItem(
-                icon: Icons.home,
-                label: 'Home',
-                index: 0,
-                selectedIndex: selectedIndex,
-              ),
-              _buildBottomNavigationBarItem(
-                icon: Icons.document_scanner,
-                label: 'Receipt Capture',
-                index: 1,
-                selectedIndex: selectedIndex,
-              ),
-              _buildBottomNavigationBarItem(
-                icon: Icons.food_bank,
-                label: 'Stock & Expiry',
-                index: 2,
-                selectedIndex: selectedIndex,
-              ),
-              _buildBottomNavigationBarItem(
-                icon: Icons.person,
-                label: 'Profile',
-                index: 3,
-                selectedIndex: selectedIndex,
-              ),
-            ],
-            currentIndex: selectedIndex,
-            selectedItemColor: const Color.fromARGB(255, 4, 49, 109), // Color for selected icon
-            unselectedItemColor: Colors.white, // Color for unselected icons
-            backgroundColor: Colors.transparent, // Transparent background
-            type: BottomNavigationBarType.fixed,
-            elevation: 0,
-            onTap: onItemTapped,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal, // Make the menu scrollable horizontally
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Spacing between the menu items
+              children: <Widget>[
+                _buildBottomNavigationBarItem(
+                  icon: Icons.home,
+                  label: 'Home',
+                  index: 0,
+                  selectedIndex: selectedIndex,
+                ),
+                _buildBottomNavigationBarItem(
+                  icon: Icons.document_scanner,
+                  label: 'Receipt Capture',
+                  index: 1,
+                  selectedIndex: selectedIndex,
+                ),
+                _buildBottomNavigationBarItem(
+                  icon: Icons.food_bank,
+                  label: 'Stock & Expiry',
+                  index: 2,
+                  selectedIndex: selectedIndex,
+                ),
+                _buildBottomNavigationBarItem(
+                  icon: Icons.edit_document,
+                  label: 'Recipe',
+                  index: 3,
+                  selectedIndex: selectedIndex,
+                ),
+                _buildBottomNavigationBarItem(
+                  icon: Icons.person,
+                  label: 'Profile',
+                  index: 4,
+                  selectedIndex: selectedIndex,
+                )
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  /// Custom function to build a `BottomNavigationBarItem` with a circular highlight background
-  BottomNavigationBarItem _buildBottomNavigationBarItem({
+  /// Custom function to build a bottom navigation item with a circular highlight background
+  Widget _buildBottomNavigationBarItem({
     required IconData icon,
     required String label,
     required int index,
     required int selectedIndex,
   }) {
-    return BottomNavigationBarItem(
-      icon: Container(
+    return GestureDetector(
+      onTap: () => onItemTapped(index), // Handle tap events
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 10.0), // Spacing between each item
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           color: selectedIndex == index
               ? Colors.white // White background color for selected item
               : Colors.transparent,
-          shape: BoxShape.circle,
+          shape: BoxShape.rectangle,
         ),
-        child: Icon(
-          icon,
-          color: selectedIndex == index
-              ? const Color.fromARGB(255, 4, 49, 109) // Deep blue color for selected item icon
-              : Colors.white, // White color for unselected item icons
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: selectedIndex == index
+                  ? const Color.fromARGB(255, 4, 49, 109) // Deep blue color for selected item icon
+                  : Colors.white, // White color for unselected item icons
+            ),
+            Text(
+              label,
+              style: TextStyle(
+                color: selectedIndex == index
+                    ? const Color.fromARGB(255, 4, 49, 109) // Text color for selected item
+                    : Colors.white, // Text color for unselected items
+              ),
+            ),
+          ],
         ),
       ),
-      label: label,
     );
   }
-}
-
-/// Custom clipper to create a Tic-Tac shape for the bottom navigation bar
-class TicTacClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final Path path = Path();
-    final double width = size.width;
-    final double height = size.height;
-
-    // Define the Tic-Tac shape using path drawing
-    path.moveTo(0, 0);
-    path.lineTo(0, height);
-    path.lineTo(width, height);
-    path.lineTo(width, 0);
-    path.arcToPoint(
-      Offset(0, 0),
-      radius: const Radius.circular(40.0),
-      clockwise: false,
-    );
-
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

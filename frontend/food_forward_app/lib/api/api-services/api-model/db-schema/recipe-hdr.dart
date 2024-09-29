@@ -40,8 +40,8 @@ class RecipeHdrSchema {
     return RecipeHdrSchema(
       guid: json['guid'],
       recipeText: json['recipe_text'] ?? 'N/A',
-      createdById: json['created_by_id'],
-      updatedById: json['updated_by_id'],
+      createdById: json['created_by_user_guid'],
+      updatedById: json['updated_by_user_guid'],
       createdDate: DateTime.parse(json['created_date']),
       updatedDate: DateTime.parse(json['updated_date']),
       expiryDate: DateTime.parse(json['updated_date']),

@@ -8,6 +8,7 @@ import 'package:food_forward_app/api/api-services/services/food-stock-service/fo
 import 'package:food_forward_app/api/api-services/api-model/db-schema/food-stock-hdr.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-model/RecipeDto.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:food_forward_app/components/bottom-navigation/bottom-navigation.dart';
 
 class StockAndExpiryScreen extends StatefulWidget {
   @override
@@ -19,6 +20,7 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
   List<FoodStockHdrSchema> selectedItems = []; // List to keep track of selected items
   String recipeText = '';
   String userId = '';
+  int _selectedIndex = 2; // Track the index of the selected tab
 
 
   @override
@@ -27,7 +29,11 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
     _getData();
     
   }
-
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index; // Update the selected index
+    });
+  }
   void _getData() async {
     print("GET FOOD STOCK HDR");
     List<FoodStockHdrSchema> fetchedItems = await FoodStockService.getFoodStock();

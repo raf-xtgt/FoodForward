@@ -67,8 +67,7 @@ class _FoodStockMgmtCardState extends State<FoodStockMgmtCard> {
 
   // Function to navigate to the Food Stock Management screen
   void _navigateToFoodStockManagement(BuildContext context) {
-    Navigator.push(
-      context,
+    Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => StockAndExpiryScreen(), // Navigate to the new screen
       ),
