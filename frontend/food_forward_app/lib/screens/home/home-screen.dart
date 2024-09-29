@@ -38,8 +38,6 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16.0),
-            const FoodStockStatsCard(),
-            const SizedBox(height: 16.0),
             const Text("Hear from the community"),
             const SizedBox(height: 16.0),
             SizedBox(

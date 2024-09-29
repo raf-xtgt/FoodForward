@@ -32,24 +32,49 @@ class _ScanReceiptCardState extends State<ScanReceiptCard> {
         elevation: _elevation, // Use dynamic elevation
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
+          side: const BorderSide(
+            color: Color(0xFF3C9CD6), // Blue border color
+            width: 2.0,
+          ),
         ),
-        color: const Color(0xFF3C9CD6), // Set background color to #3c9cd6
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(
-                Icons.document_scanner, 
-                size: 50,
-                color: const Color(0xFFF4EDED), // Set icon color to #f4eded
+              Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFF3C9CD6), // White background for the icon
+                  shape: BoxShape.circle,
+                ),
+                padding: const EdgeInsets.all(8.0), // Padding around the icon
+                child: const Icon(
+                  Icons.document_scanner,
+                  size: 50,
+                  color: Colors.white, // Set icon color to blue
+                ),
               ),
-              const SizedBox(height: 8.0),
-              Text(
-                'Capture Receipt',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.white, // Set text color to white for better contrast
+              // Centering the number and text
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center, // Center vertically
+                // crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    '20',
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          color: const Color(0xFF3C9CD6), // Blue color for the number
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  const Text(
+                    'Scans',
+                    style: TextStyle(
+                      fontSize: 16.0, // Smaller text size
+                      color: Color(0xFF3C9CD6), // Blue color for the text
                     ),
+                  ),
+                ],
               ),
             ],
           ),
