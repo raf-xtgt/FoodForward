@@ -3,6 +3,7 @@ package com.foodforward.WebServiceApplication.service.recipe;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodforward.WebServiceApplication.dao.recipe.RecipeRepository;
+import com.foodforward.WebServiceApplication.model.container.foodStock.FoodStock;
 import com.foodforward.WebServiceApplication.model.container.recipe.RecipeContainer;
 import com.foodforward.WebServiceApplication.model.databaseSchema.recipe.recipe_hdr;
 import com.foodforward.WebServiceApplication.model.dto.SaveRecipeDto;
@@ -18,6 +19,7 @@ import com.foodforward.WebServiceApplication.model.dto.RecipeDto;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -71,5 +73,17 @@ public class RecipeService {
         log.info("Successfully generated recipe");
 
         return Optional.ofNullable(response);
+    }
+
+    public Optional<List<RecipeContainer>> getAllRecipes(){
+        try{
+            List<RecipeContainer> recipeList = dao.findAll().stream().map(RecipeContainer::new).toList();
+            return Optional.of(recipeList);
+        }
+        catch(Exception e){
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return Optional.empty();
     }
 }

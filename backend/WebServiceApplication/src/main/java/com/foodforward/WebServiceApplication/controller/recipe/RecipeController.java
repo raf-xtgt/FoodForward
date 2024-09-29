@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -69,6 +70,35 @@ public class RecipeController {
         } else {
             StreamingResponseBody errorResponse = outputStream -> {
                 ApiResponse<String> apiResponse = new ApiResponse<>(500, "Recipe suggestion failed");
+                String jsonResponse = new ObjectMapper().writeValueAsString(apiResponse);
+                outputStream.write(jsonResponse.getBytes());
+            };
+            return ResponseEntity.status(500)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(errorResponse);
+        }
+    }
+
+    @GetMapping(value ="/read/all")
+    public ResponseEntity<StreamingResponseBody> readAll() {
+        final Optional<List<RecipeContainer>> list = recipeService.getAllRecipes();
+
+        if (list.isPresent()) {
+            StreamingResponseBody responseBody = outputStream -> {
+                try {
+                    ApiResponse<List<RecipeContainer>> apiResponse = new ApiResponse<>(200, list.get());
+                    String jsonResponse = new ObjectMapper().writeValueAsString(apiResponse);
+                    outputStream.write(jsonResponse.getBytes());
+                } catch (IOException e) {
+                    throw new RuntimeException("Error streaming response", e);
+                }
+            };
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(responseBody);
+        } else {
+            StreamingResponseBody errorResponse = outputStream -> {
+                ApiResponse<String> apiResponse = new ApiResponse<>(500, "Recipe read failed");
                 String jsonResponse = new ObjectMapper().writeValueAsString(apiResponse);
                 outputStream.write(jsonResponse.getBytes());
             };
