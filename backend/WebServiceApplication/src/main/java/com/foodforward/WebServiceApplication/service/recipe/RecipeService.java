@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.foodforward.WebServiceApplication.model.dto.RecipeDto;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -39,10 +40,18 @@ public class RecipeService {
         return Optional.of(recipe);
     }
 
+    public Optional<RecipeContainer> updateRecipe(final RecipeContainer cont){
+        dao.save(cont.getRecipe_hdr());
+        log.info("Successfully updated recipe");
+        return Optional.of(cont);
+    }
+
     private RecipeContainer constructRecipe(final SaveRecipeDto recipeDto){
         recipe_hdr hdr = new recipe_hdr();
         hdr.setGuid(UUID.randomUUID().toString());
         hdr.setRecipe_text(recipeDto.getRecipeText());
+        hdr.setRecipe_stars(0);
+        hdr.setRecipe_reiview("");
         hdr.setCreated_by_user_guid(recipeDto.getUserId());
         hdr.setUpdated_by_user_guid(recipeDto.getUserId());
         hdr.setCreated_date(Instant.now().toString());

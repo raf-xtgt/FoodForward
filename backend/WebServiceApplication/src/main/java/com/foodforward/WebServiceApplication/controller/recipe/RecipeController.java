@@ -51,6 +51,34 @@ public class RecipeController {
         }
     }
 
+    @PutMapping(value ="/update", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<StreamingResponseBody> updateRecipe(@RequestBody final RecipeContainer recipeContainer) {
+        final Optional<RecipeContainer> cont = recipeService.updateRecipe(recipeContainer);
+        if (cont.isPresent()) {
+            StreamingResponseBody responseBody = outputStream -> {
+                try {
+                    ApiResponse<RecipeContainer> apiResponse = new ApiResponse<>(200, cont.get());
+                    String jsonResponse = new ObjectMapper().writeValueAsString(apiResponse);
+                    outputStream.write(jsonResponse.getBytes());
+                } catch (IOException e) {
+                    throw new RuntimeException("Error streaming response", e);
+                }
+            };
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(responseBody);
+        } else {
+            StreamingResponseBody errorResponse = outputStream -> {
+                ApiResponse<String> apiResponse = new ApiResponse<>(500, "Recipe save failed");
+                String jsonResponse = new ObjectMapper().writeValueAsString(apiResponse);
+                outputStream.write(jsonResponse.getBytes());
+            };
+            return ResponseEntity.status(500)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(errorResponse);
+        }
+    }
+
     @PostMapping(value ="/get-suggestion", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StreamingResponseBody> getSuggestion(@RequestBody final RecipeDto dto) {
         final Optional<String> cont = recipeService.getRecipe(dto);

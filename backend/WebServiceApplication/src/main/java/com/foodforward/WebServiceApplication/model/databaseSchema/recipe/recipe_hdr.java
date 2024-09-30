@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
@@ -12,6 +13,9 @@ public class recipe_hdr {
     private String guid;
     @Column(columnDefinition = "TEXT")
     private String recipe_text;
+    private Integer recipe_stars;
+    @Column(columnDefinition = "TEXT")
+    private String recipe_reiview;
     private String created_by_user_guid;
     private String updated_by_user_guid;
     private String created_date;
@@ -72,5 +76,21 @@ public class recipe_hdr {
 
     public static void setSchemaAlias(String schemaAlias) {
         recipe_hdr.schemaAlias = schemaAlias;
+    }
+
+    public Integer getRecipe_stars() {
+        return recipe_stars;
+    }
+
+    public void setRecipe_stars(Integer recipe_stars) {
+        this.recipe_stars = recipe_stars;
+    }
+
+    public String getRecipe_reiview() {
+        return recipe_reiview;
+    }
+
+    public void setRecipe_reiview(String recipe_reiview) {
+        this.recipe_reiview = recipe_reiview;
     }
 }

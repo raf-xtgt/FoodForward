@@ -33,78 +33,6 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
   }
 
 
-  void showRecipeDialog(BuildContext context, String recipeContent) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: const Text('Recipe Suggestion'),
-          content: SizedBox(
-            height: 400, // Set a height to limit the dialog size
-            width: double.maxFinite,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Text(
-                    recipeContent,
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: Text('Print'),
-              onPressed: () async {
-                // Generate and save the PDF
-                await _generateAndSavePdf(recipeContent);
-              },
-            ),
-            TextButton(
-              child: Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _generateAndSavePdf(String recipeContent) async {
-    // Create a new PDF document
-    final pdf = pw.Document();
-
-    // Add a page to the PDF with the recipe content
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) => pw.Center(
-          child: pw.Text(recipeContent),
-        ),
-      ),
-    );
-
-    // Move to the Downloads folder explicitly (for Android compatibility)
-    Directory? downloadsDirectory = Directory('/storage/emulated/0/Download');
-
-    // Create the file path in the Downloads directory
-    final filePath = '${downloadsDirectory.path}/recipe_suggestion.pdf';
-
-    // Save the PDF file
-    final file = File(filePath);
-    await file.writeAsBytes(await pdf.save());
-
-    // Log the file path and show success message
-    print("PDF saved at: $filePath");
-
-    // Optionally open or share the file after saving it
-  }
-
   // Function to handle card selection and deselection
   void _toggleSelection(RecipeHdrSchema item) {
     setState(() {
@@ -130,24 +58,6 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
     return Scaffold(
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: const InputDecoration(
-                labelText: 'Filter by date',
-                suffixIcon: Icon(Icons.date_range),
-              ),
-              onTap: () async {
-                DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2100),
-                );
-                // Handle the picked date
-              },
-            ),
-          ),
           Expanded(
             child: ListView.builder(
               itemCount: items.length,
@@ -170,7 +80,7 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
                           : null, // Show cross button on the left if item is selected
                       title: Text(item.recipeText),
                       trailing: IconButton(
-                        icon: const Icon(Icons.edit),
+                        icon: const Icon(Icons.reviews),
                         onPressed: () async {
                         },
                       ),

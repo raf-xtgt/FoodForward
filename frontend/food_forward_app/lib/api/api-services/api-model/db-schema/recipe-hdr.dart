@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 class RecipeHdrSchema {
   final String guid;
   final String recipeText;
+  final int recipeStars;
+  final String recipeReview;
   final String createdById;
   final String updatedById;
   final DateTime createdDate;
@@ -13,6 +15,8 @@ class RecipeHdrSchema {
   RecipeHdrSchema({
     required this.guid,
     required this.recipeText,
+    required this.recipeStars,
+    required this.recipeReview,
     required this.createdById,
     required this.updatedById,
     required this.createdDate,
@@ -26,6 +30,8 @@ class RecipeHdrSchema {
       "recipe_hdr" :{
         'guid': guid,
         'recipe_text': recipeText,
+        'recipe_stars': recipeStars,
+        'recipe_reiview': recipeReview,
         'created_by_user_guid': createdById,
         'updated_by_user_guid': updatedById,
         'created_date':  formatDate(createdDate),
@@ -40,6 +46,8 @@ class RecipeHdrSchema {
     return RecipeHdrSchema(
       guid: json['guid'],
       recipeText: json['recipe_text'] ?? 'N/A',
+      recipeStars: json['recipe_stars'] ?? 0,
+      recipeReview: json['recipe_reiview'] ?? 'N/A',
       createdById: json['created_by_user_guid'],
       updatedById: json['updated_by_user_guid'],
       createdDate: DateTime.parse(json['created_date']),
