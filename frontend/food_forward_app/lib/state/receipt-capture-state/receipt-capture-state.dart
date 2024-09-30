@@ -1,11 +1,9 @@
 import 'dart:async';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:food_forward_app/screens/receipt-capture/receipt-capture-screen.dart';
 import 'package:food_forward_app/screens/receipt-capture/receipt-display-screen.dart';
 import 'package:food_forward_app/api/api-services/services/image-upload-service/image-upload-service.dart';
-
 
 class TakePictureScreenState extends State<ReceiptCaptureScreen> {
   late CameraController _controller;
@@ -16,8 +14,7 @@ class TakePictureScreenState extends State<ReceiptCaptureScreen> {
   @override
   void initState() {
     super.initState();
-    // To display the current output from the Camera,
-    // create a CameraController.
+    // Create a CameraController to display the current output from the Camera.
     _controller = CameraController(
       // Get a specific camera from the list of available cameras.
       widget.camera,
@@ -41,7 +38,7 @@ class TakePictureScreenState extends State<ReceiptCaptureScreen> {
     clearImageList();
   }
 
-  clearImageList(){
+  void clearImageList() {
     // Clear images if needed
     setState(() {
       _images.clear();
@@ -49,14 +46,9 @@ class TakePictureScreenState extends State<ReceiptCaptureScreen> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // You must wait until the controller is initialized before displaying the
-      // camera preview. Use a FutureBuilder to display a loading spinner until the
-      // controller has finished initializing.
       body: FutureBuilder<void>(
         future: _initializeControllerFuture,
         builder: (context, snapshot) {
@@ -70,8 +62,8 @@ class TakePictureScreenState extends State<ReceiptCaptureScreen> {
                   ),
                 ),
                 Positioned(
-                  bottom: 16.0,
-                  left: 16.0,
+                  top: 20.0,
+                  right: 16.0,
                   child: Container(
                     padding: const EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
@@ -87,20 +79,6 @@ class TakePictureScreenState extends State<ReceiptCaptureScreen> {
                     ),
                   ),
                 ),
-                Positioned(
-                  top: 10.0,
-                  right: 3.0,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_images.isNotEmpty) {
-                        uploadImages();
-                      } else {
-                        print('No images to upload');
-                      }
-                    },
-                    child: const Text('Upload'),
-                  ),
-                ),
               ],
             );
           } else {
@@ -108,44 +86,61 @@ class TakePictureScreenState extends State<ReceiptCaptureScreen> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        // Provide an onPressed callback.
-        onPressed: () async {
-          // Take the Picture in a try / catch block. If anything goes wrong,
-          // catch the error.
-          try {
-            // Ensure that the camera is initialized.
-            await _initializeControllerFuture;
+      floatingActionButton: Align(
+        alignment: Alignment.bottomCenter,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FloatingActionButton(
+                heroTag: 'cameraButton',
+                onPressed: () async {
+                  try {
+                    await _initializeControllerFuture;
 
-            // Attempt to take a picture and get the file `image`
-            // where it was saved.
-            final image = await _controller.takePicture();
+                    // Attempt to take a picture and get the file `image`
+                    final image = await _controller.takePicture();
 
-            if (!context.mounted) return;
+                    if (!context.mounted) return;
 
-            // If the picture was taken, display it on a new screen.
-            final result = await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ReceiptDisplayScreen(
-                  imagePath: image.path,
-                ),
+                    // If the picture was taken, display it on a new screen.
+                    final result = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ReceiptDisplayScreen(
+                          imagePath: image.path,
+                        ),
+                      ),
+                    );
+
+                    // If the user chose to continue, save the image.
+                    if (result == true) {
+                      setState(() {
+                        _images.add(image.path);
+                        _imagesTaken++;
+                      });
+                    }
+                  } catch (e) {
+                    print(e); // Log error to console
+                  }
+                },
+                child: const Icon(Icons.camera_alt),
               ),
-            );
-
-            // If the user chose to continue, save the image.
-            if (result == true) {
-              setState(() {
-                _images.add(image.path);
-                _imagesTaken++;
-              });
-            }
-
-          } catch (e) {
-            // If an error occurs, log the error to the console.
-            print(e);
-          }
-        },
-        child: const Icon(Icons.camera_alt),
+              const SizedBox(width: 16.0), // Add spacing between the buttons
+              FloatingActionButton(
+                heroTag: 'uploadButton',
+                onPressed: () {
+                  if (_images.isNotEmpty) {
+                    uploadImages();
+                  } else {
+                    print('No images to upload');
+                  }
+                },
+                child: const Icon(Icons.cloud_upload),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
