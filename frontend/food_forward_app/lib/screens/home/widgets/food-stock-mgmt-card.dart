@@ -68,7 +68,7 @@ class _FoodStockMgmtCardState extends State<FoodStockMgmtCard> {
                   ),
                   const SizedBox(height: 4.0),
                   const Text(
-                    'Recipes',
+                    'Inventory',
                     style: TextStyle(
                       fontSize: 16.0, // Smaller text size
                       color: Color(0xFF3C9CD6), // Blue color for the text

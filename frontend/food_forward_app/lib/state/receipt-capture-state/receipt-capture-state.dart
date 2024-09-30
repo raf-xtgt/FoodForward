@@ -64,7 +64,7 @@ class TakePictureScreenState extends State<ReceiptCaptureScreen> {
             return Stack(
               children: [
                 Container(
-                  color: Color.fromARGB(255, 139, 138, 138),
+                  color: const Color(0xFFFFF4EC), // Setting the background color
                   child: Center(
                     child: CameraPreview(_controller),
                   ),
