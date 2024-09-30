@@ -56,7 +56,7 @@ class FoodStockHdrSchema {
       updatedById: json['updated_by_id'],
       createdDate: DateTime.parse(json['created_date']),
       updatedDate: DateTime.parse(json['updated_date']),
-      expiryDate: DateTime.parse(json['updated_date']),
+      expiryDate: json['expiry_date'] != null ? DateTime.parse(json['expiry_date']) : DateTime.now().add(Duration(days: 14)),
 
     );
   }
