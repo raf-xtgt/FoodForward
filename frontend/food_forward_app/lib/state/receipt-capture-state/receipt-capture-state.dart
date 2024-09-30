@@ -58,7 +58,11 @@ class TakePictureScreenState extends State<ReceiptCaptureScreen> {
                 Container(
                   color: const Color(0xFFFFF4EC), // Setting the background color
                   child: Center(
-                    child: CameraPreview(_controller),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 850.0, // Increase this value to change the height of the camera preview
+                      child: CameraPreview(_controller),
+                    ),
                   ),
                 ),
                 Positioned(
