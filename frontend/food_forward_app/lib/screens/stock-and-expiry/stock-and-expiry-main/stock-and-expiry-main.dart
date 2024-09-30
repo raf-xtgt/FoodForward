@@ -19,6 +19,7 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
   String recipeText = '';
   String userId = '';
   int _selectedIndex = 2; // Track the index of the selected tab
+  String? _selectedFilter; // Variable to track the selected filter
 
   @override
   void initState() {
@@ -104,6 +105,52 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
     );
   }
 
+  void _filterFreshItems() {
+    setState(() {
+      if (_selectedFilter == 'Fresh') {
+        _resetFilter(); // Reset if already selected
+      } else {
+        _selectedFilter = 'Fresh'; // Set as selected
+        items = items.where((item) {
+          return item.expiryDate != null && item.expiryDate!.isAfter(DateTime.now().add(const Duration(days: 7)));
+        }).toList();
+      }
+    });
+  }
+
+  void _filterNearExpiryItems() {
+    setState(() {
+      if (_selectedFilter == 'Near Expiry') {
+        _resetFilter(); // Reset if already selected
+      } else {
+        _selectedFilter = 'Near Expiry'; // Set as selected
+        items = items.where((item) {
+          return item.expiryDate != null && item.expiryDate!.isAfter(DateTime.now()) && item.expiryDate!.isBefore(DateTime.now().add(const Duration(days: 7)));
+        }).toList();
+      }
+    });
+  }
+
+  void _filterExpiredItems() {
+    setState(() {
+      if (_selectedFilter == 'Expired') {
+        _resetFilter(); // Reset if already selected
+      } else {
+        _selectedFilter = 'Expired'; // Set as selected
+        items = items.where((item) {
+          return item.expiryDate != null && item.expiryDate!.isBefore(DateTime.now());
+        }).toList();
+      }
+    });
+  }
+
+
+  void _resetFilter() {
+    // Call this method to reset the filter and show all items
+    _getData(); // This method fetches all food stock items again
+  }
+
+
   Future<void> _generateAndSavePdf(String recipeContent) async {
     final pdf = pw.Document();
     pdf.addPage(
@@ -169,24 +216,38 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                // Fresh Card
-                _buildExpiryStatusCard(
-                  label: "Fresh",
-                  color: Colors.green,
-                  backgroundColor: Colors.green.shade50,
-                ),
-                // Near Expiry Card
-                _buildExpiryStatusCard(
-                  label: "Near Expiry",
-                  color: Colors.yellow,
-                  backgroundColor: Colors.yellow.shade50,
-                ),
-                // Expired Card
-                _buildExpiryStatusCard(
-                  label: "Expired",
-                  color: Colors.red,
-                  backgroundColor: Colors.red.shade50,
-                ),
+              // Fresh Card
+              _buildExpiryStatusCard(
+                label: "Fresh",
+                color: Colors.green,
+                backgroundColor: Colors.green.shade50,
+                onTap: () {
+                  _filterFreshItems();
+                },
+                isSelected: _selectedFilter == 'Fresh', // Check if selected
+              ),
+              // Near Expiry Card
+              _buildExpiryStatusCard(
+                label: "Near Expiry",
+                color: Colors.yellow,
+                backgroundColor: Colors.yellow.shade50,
+                onTap: () {
+                  _filterNearExpiryItems();
+                },
+                isSelected: _selectedFilter == 'Near Expiry', // Check if selected
+              ),
+              // Expired Card
+              _buildExpiryStatusCard(
+                label: "Expired",
+                color: Colors.red,
+                backgroundColor: Colors.red.shade50,
+                onTap: () {
+                  _filterExpiredItems();
+                },
+                isSelected: _selectedFilter == 'Expired', // Check if selected
+              ),
+
+
               ],
             ),
           ),
@@ -253,40 +314,54 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
     );
   }
 
-  // Method to build the expiry status cards with label and color
-  Widget _buildExpiryStatusCard({required String label, required Color color, required Color backgroundColor}) {
-    return Container(
-      width: 110, // Width of the card
-      height: 40, // Height of the card
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(20.0), // Tic Tac shape
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 30, // 30% of the card width for the colored indicator
-            height: 40,
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20.0),
-                bottomLeft: Radius.circular(20.0),
+Widget _buildExpiryStatusCard({
+  required String label,
+  required Color color,
+  required Color backgroundColor,
+  required VoidCallback onTap,
+  bool isSelected = false, // New parameter to indicate selection
+}) {
+  return Material(
+    elevation: 4,
+    borderRadius: BorderRadius.circular(20.0),
+    child: InkWell(
+      borderRadius: BorderRadius.circular(20.0),
+      onTap: onTap,
+      child: Container(
+        width: 110,
+        height: 40,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(20.0),
+          border: isSelected ? Border.all(color: Colors.blue, width: 2) : null, // Blue border if selected
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 30,
+              height: 40,
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20.0),
+                  bottomLeft: Radius.circular(20.0),
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: Center(
-              child: Text(
-                label,
-                style: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+            Expanded(
+              child: Center(
+                child: Text(
+                  label,
+                  style: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   // Function to display the colored indicator based on expiry date
   Widget _buildExpiryIndicator(DateTime? expiryDate) {
