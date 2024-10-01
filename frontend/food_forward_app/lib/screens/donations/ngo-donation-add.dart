@@ -105,11 +105,14 @@ class _NgoDonationAddScreenState extends State<NgoDonationAddScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFFFF4EC),
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("Add Donation "),
+        backgroundColor: const Color(0xFF2B72A8),
+        title: const Text("Add Donation", 
+          style: TextStyle(
+            color: Colors.white, // Set the desired color for the title text
+          ),),
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             onPressed: _navigateToProfile,
           ),
         ],
