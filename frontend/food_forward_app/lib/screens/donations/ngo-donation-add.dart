@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:food_forward_app/api/api-services/api-model/db-schema/recipe-hdr.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:food_forward_app/api/api-services/api-model/db-model/DonationDto.dart';
+import 'package:food_forward_app/api/api-services/services/donation/donation-service.dart';
 import 'package:food_forward_app/components/bottom-navigation/bottom-navigation.dart';
 import 'package:food_forward_app/screens/profile/profile-screen.dart';
-import 'package:pdf/widgets.dart' as pw; // PDF library
-import 'dart:io';
 import 'package:food_forward_app/screens/stock-and-expiry/stock-and-expiry-edit/stock-and-expiry-edit.dart';
 import 'package:food_forward_app/api/api-services/services/food-stock-service/food-stock-service.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-schema/food-stock-hdr.dart';
-import 'package:food_forward_app/api/api-services/api-model/db-model/RecipeDto.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class NgoDonationAddScreen extends StatefulWidget {
+  final String? ngoItemId; 
+  NgoDonationAddScreen({required this.ngoItemId});
   @override
   _NgoDonationAddScreenState createState() => _NgoDonationAddScreenState();
 }
@@ -38,7 +38,24 @@ class _NgoDonationAddScreenState extends State<NgoDonationAddScreen> {
     _filterNearExpiryItems();
   }
 
-  void _addDonation(){}
+  void _addDonation() async {
+    List<String> selectedItemIds = selectedItems.map((item) {
+      return item.guid;
+    }).toList();
+    final FlutterSecureStorage storage = FlutterSecureStorage();
+
+    final String? userId = await storage.read(key: 'userId');
+
+    DonationDto donationDto = DonationDto (
+        ngoGuid: widget.ngoItemId ?? '',
+        userId: userId ?? '',
+        foodStockGuids: selectedItemIds
+      );
+    var result =  await DonationService.create(donationDto);
+    if (result.statusCode == 200){
+         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Food donation initiated successfully'))); 
+    }
+  }
 
 
 
@@ -154,7 +171,7 @@ class _NgoDonationAddScreenState extends State<NgoDonationAddScreen> {
       floatingActionButton: selectedItems.isNotEmpty
           ? FloatingActionButton(
               onPressed: _addDonation,
-              tooltip: 'Generate Recipe',
+              tooltip: 'Donate Food Stock',
               child: const Icon(Icons.volunteer_activism),
             )
           : null,

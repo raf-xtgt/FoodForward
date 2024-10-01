@@ -28,6 +28,7 @@ class _NgoDonationListingScreenState extends State<NgoDonationListingScreen> {
 
   void _getData() async {
     print(widget.ngoItem?.code);
+        print(widget.ngoItem?.guid);
     List<NgoHdrSchema> fetchedItems = await NgoHdrService.getNgoList();
     setState(() {
       items = fetchedItems; // Update the state with the fetched data
@@ -65,7 +66,7 @@ class _NgoDonationListingScreenState extends State<NgoDonationListingScreen> {
     
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => NgoDonationAddScreen(),
+        builder: (context) => NgoDonationAddScreen(ngoItemId: widget.ngoItem?.guid.toString()),
       ),
     );
   }

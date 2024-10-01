@@ -85,7 +85,7 @@ class MyHomePageState extends State<MyHomePage> {
                   RecipeListScreen(),
                   NgoListingScreen(),
                   NgoDonationListingScreen(ngoItem: null,),
-                  NgoDonationAddScreen(),
+                  NgoDonationAddScreen(ngoItemId: '',),
                  ProfileScreen(),
                 ],
               ),
