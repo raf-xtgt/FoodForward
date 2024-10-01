@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_forward_app/homepage.dart';
+import 'package:food_forward_app/screens/donations/ngo-listing.dart';
 import 'package:food_forward_app/screens/home/home-screen.dart';
 import 'package:food_forward_app/components/bottom-navigation/bottom-navigation.dart';
 import 'package:food_forward_app/screens/profile/profile-screen.dart';
@@ -80,6 +81,7 @@ class MyHomePageState extends State<MyHomePage> {
                   if (cam != null) ReceiptCaptureScreen(camera: cam!), // Ensure cam is not null before using it
                   StockAndExpiryScreen(),
                   RecipeListScreen(),
+                  NgoListingScreen(),
                  ProfileScreen(),
                 ],
               ),
