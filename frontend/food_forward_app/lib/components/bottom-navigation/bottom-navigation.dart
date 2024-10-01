@@ -59,9 +59,15 @@ class BottomNavigation extends StatelessWidget {
                   selectedIndex: selectedIndex,
                 ),
                 _buildBottomNavigationBarItem(
+                  icon: Icons.volunteer_activism,
+                  label: 'Donations',
+                  index: 4,
+                  selectedIndex: selectedIndex,
+                ),
+                _buildBottomNavigationBarItem(
                   icon: Icons.person,
                   label: 'Profile',
-                  index: 4,
+                  index: 5,
                   selectedIndex: selectedIndex,
                 )
               ],

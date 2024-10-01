@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-schema/recipe-hdr.dart';
-import 'package:pdf/widgets.dart' as pw; // PDF library
-// For handling permissions on Android
-import 'dart:io';
 import 'package:food_forward_app/api/api-services/services/recipe/recipe-service.dart';
-
+import 'package:pdf/widgets.dart' as pw; // PDF library
 
 class RecipeListScreen extends StatefulWidget {
   @override
@@ -13,15 +10,13 @@ class RecipeListScreen extends StatefulWidget {
 
 class _RecipeListScreenState extends State<RecipeListScreen> {
   List<RecipeHdrSchema> items = [];
-   List<RecipeHdrSchema> selectedItems = []; // List to keep track of selected items
-
-
+  List<RecipeHdrSchema> selectedItems = []; // List to keep track of selected items
+  int? expandedIndex; // Track the currently expanded card index
 
   @override
   void initState() {
     super.initState();
     _getData();
-    
   }
 
   void _getData() async {
@@ -31,7 +26,6 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
       items = fetchedItems; // Update the state with the fetched data
     });
   }
-
 
   // Function to handle card selection and deselection
   void _toggleSelection(RecipeHdrSchema item) {
@@ -44,14 +38,76 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
     });
   }
 
-  // Function to deselect all items
-  void _deselectAllItems() {
-    setState(() {
-      selectedItems.clear();
-    });
-  }
-
   // Function to display selected item data
+  void _showReviewDialog(RecipeHdrSchema item) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        double rating = 0.0; // Rating for the stars
+        final reviewController = TextEditingController(); // Controller for the review text field
+        Color borderColor = Colors.blue; // Set your desired border color here
+        Color starBorderColor = Colors.yellow; // Set your desired border color here
+
+        return AlertDialog(
+          title: const Text('Review Recipe'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(5, (index) {
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        index+=1;
+                        rating = index + 1; // Update rating based on the star selected
+                      });
+                    },
+                    child: Icon(
+                      index < rating ? Icons.star : Icons.star_border,
+                      color: index < rating ? Colors.yellow : starBorderColor, // Fill star with yellow, else border color
+                    ),
+                  );
+                }),
+              ),
+              const SizedBox(height: 20.0, width: 15,), // Add spacing between stars and text field
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0), // Add padding
+                decoration: BoxDecoration(
+                  border: Border.all(color: borderColor), // Add a border
+                  borderRadius: BorderRadius.circular(8.0), // Rounded corners
+                ),
+                child: TextField(
+                  controller: reviewController,
+                  maxLines: 5, // Make the text field larger by allowing multiple lines
+                  decoration: const InputDecoration(
+                    labelText: 'Enter your review',
+                    border: InputBorder.none, // Remove the default border
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Print the item data to the console
+                print("Recipe: ${item.recipeText}, Rating: $rating, Review: ${reviewController.text}");
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Save Review'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,26 +120,32 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
               itemBuilder: (context, index) {
                 final item = items[index];
                 final isSelected = selectedItems.contains(item);
+                final isExpanded = expandedIndex == index; // Check if this card is expanded
+
                 return GestureDetector(
-                  onLongPress: () => _toggleSelection(item), // Toggle selection on long press
+                  onTap: () {
+                    setState(() {
+                      expandedIndex = isExpanded ? null : index; // Toggle expansion
+                    });
+                  },
                   child: Card(
                     color: isSelected ? Colors.blue.shade100 : null, // Change color if selected
-                    child: ListTile(
-                      leading: isSelected
-                          ? IconButton(
-                              icon: Icon(Icons.close),
-                              onPressed: () {
-                                _toggleSelection(item);
-                              },
-                              tooltip: 'Deselect',
-                            )
-                          : null, // Show cross button on the left if item is selected
-                      title: Text(item.recipeText),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.reviews),
-                        onPressed: () async {
-                        },
-                      ),
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: Text('Recipe #${index + 1} - ${item.createdDate?.toLocal().toString().split(' ')[0]}'),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.reviews),
+                            onPressed: () => _showReviewDialog(item), // Show review dialog
+                          ),
+                        ),
+                        if (isExpanded) ...[
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(item.recipeText), // Show recipe details
+                          ),
+                        ],
+                      ],
                     ),
                   ),
                 );
