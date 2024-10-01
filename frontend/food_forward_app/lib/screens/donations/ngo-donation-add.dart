@@ -116,6 +116,40 @@ class _NgoDonationAddScreenState extends State<NgoDonationAddScreen> {
       ),
       body: Column(
         children: [
+
+              Align(
+                alignment: Alignment.topCenter, // Align at the top center of the screen
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 80.0, vertical: 5.0), // Horizontal padding and some vertical space
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF3C9CD6), // Blue background for the icon
+                          shape: BoxShape.circle,
+                        ),
+                        padding: const EdgeInsets.all(8.0), // Reduced padding around the icon
+                        child: const Icon(
+                          Icons.card_giftcard,
+                          size: 40, // Slightly smaller icon size
+                          color: Colors.white, // Set icon color to white
+                        ),
+                      ),
+                      const SizedBox(height: 8.0), // Spacing between the icon and the text
+                      const Text(
+                        'Make a donation',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold, // Text style with bold font
+                          color: Color(0xFF3C9CD6), // Blue color for the text
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+
           // Display the list of food items
           Expanded(
   child: ListView.builder(
@@ -125,7 +159,10 @@ class _NgoDonationAddScreenState extends State<NgoDonationAddScreen> {
       final isSelected = selectedItems.contains(item);
       return GestureDetector(
         onLongPress: () => _toggleSelection(item),
-        child: Card(
+        
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0), // Add padding to the left and righ
+            child: Card(
           color: isSelected ? Colors.blue.shade100 : null, // Change color if selected
           elevation: 2, // Add some elevation for shadow effect
           shape: RoundedRectangleBorder(
@@ -152,23 +189,9 @@ class _NgoDonationAddScreenState extends State<NgoDonationAddScreen> {
             ),
             title: Text(item.name),
             subtitle: Text('Qty: ${item.quantity}, Price: ${item.unitPrice}, Expiry: ${item.expiryDate.toLocal().toString().split(' ')[0]}'),
-            trailing: IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () async {
-                final updatedItem = await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => EditStockItemScreen(item: item),
-                  ),
-                );
-
-                if (updatedItem != null && updatedItem is FoodStockHdrSchema) {
-                  setState(() {
-                    items[index] = updatedItem; // Update the item in the list
-                  });
-                }
-              },
-            ),
           ),
+        ),
+      
         ),
       );
     },
