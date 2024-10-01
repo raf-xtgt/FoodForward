@@ -43,13 +43,21 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 16.0),
+                Text("Working towards supporting NGOs worldwide.", 
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color:  Color(0xFF2B72A8),
+                    ),
+                  ),
+              
 
               ],
             ),
           ),
         ),
-                  ),
-                  ),
+      ),
+      ),
       ),
     );
   }
