@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-schema/ngo-hdr.dart';
 import 'package:food_forward_app/api/api-services/services/donation/ngo-hdr-service.dart';
 import 'package:food_forward_app/api/api-services/services/recipe/recipe-service.dart';
+import 'package:food_forward_app/components/bottom-navigation/bottom-navigation.dart';
 import 'package:food_forward_app/screens/profile/profile-screen.dart';
 import 'package:pdf/widgets.dart' as pw; // PDF library
 
@@ -14,6 +15,7 @@ class _NgoDonationListingScreenState extends State<NgoDonationListingScreen> {
   List<NgoHdrSchema> items = [];
   List<NgoHdrSchema> selectedItems = []; // List to keep track of selected items
   int? expandedIndex; // Track the currently expanded card index
+  int _selectedIndex = 4; // Track the index of the selected tab
 
   @override
   void initState() {
@@ -39,23 +41,32 @@ class _NgoDonationListingScreenState extends State<NgoDonationListingScreen> {
     });
   }
 
-
   void _navigateToProfile() async {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ProfileScreen(),
       ),
     );
-
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index; // Update the selected index
+    });
+  }
+
+  // Handle the add button press event
+  void _onAddButtonPressed() {
+    print('Add button pressed');
+    // Implement your logic for add button press
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("Uwu"),
+        title: Text("Ngo Donation Listing"),
         actions: [
           IconButton(
             icon: Icon(Icons.person),
@@ -63,47 +74,63 @@ class _NgoDonationListingScreenState extends State<NgoDonationListingScreen> {
           ),
         ],
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                final item = items[index];
-                final isSelected = selectedItems.contains(item);
-                final isExpanded = expandedIndex == index; // Check if this card is expanded
+          Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    final item = items[index];
+                    final isSelected = selectedItems.contains(item);
+                    final isExpanded = expandedIndex == index; // Check if this card is expanded
 
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      expandedIndex = isExpanded ? null : index; // Toggle expansion
-                    });
-                  },
-                  child: Card(
-                    color: isSelected ? Colors.blue.shade100 : null, // Change color if selected
-                    child: Column(
-                      children: [
-                        ListTile(
-                          title: Text('${item.code }'),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.arrow_circle_right),
-                            onPressed: () => print(item.name), // Show review dialog
-                          ),
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          expandedIndex = isExpanded ? null : index; // Toggle expansion
+                        });
+                      },
+                      child: Card(
+                        color: isSelected ? Colors.blue.shade100 : null, // Change color if selected
+                        child: Column(
+                          children: [
+                            ListTile(
+                              title: Text('${item.code}'),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.track_changes),
+                                onPressed: () => print(item.name), // Show review dialog
+                              ),
+                            ),
+                            if (isExpanded)
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(item.description), // Show recipe details
+                              ),
+                          ],
                         ),
-                        if (isExpanded) ...[
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Text(item.description), // Show recipe details
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                );
-              },
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            right: 16, // Adjust the distance from the left edge of the screen
+            bottom: 16, // Adjust the distance from the bottom of the screen
+            child: FloatingActionButton(
+              onPressed: _onAddButtonPressed,
+              child: Icon(Icons.add),
+              backgroundColor: Colors.blue,
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: BottomNavigation(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
       ),
     );
   }
