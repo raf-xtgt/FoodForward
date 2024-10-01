@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-schema/ngo-donation-hdr.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-schema/ngo-hdr.dart';
 import 'package:food_forward_app/api/api-services/services/donation/donation-service.dart';
-import 'package:food_forward_app/api/api-services/services/donation/ngo-hdr-service.dart';
-import 'package:food_forward_app/api/api-services/services/recipe/recipe-service.dart';
 import 'package:food_forward_app/components/bottom-navigation/bottom-navigation.dart';
 import 'package:food_forward_app/screens/donations/ngo-donation-add.dart';
 import 'package:food_forward_app/screens/profile/profile-screen.dart';
-import 'package:pdf/widgets.dart' as pw; // PDF library
 
 class NgoDonationListingScreen extends StatefulWidget {
   final NgoHdrSchema? ngoItem; 
@@ -84,14 +81,8 @@ class _NgoDonationListingScreenState extends State<NgoDonationListingScreen> {
                   itemCount: items.length,
                   itemBuilder: (context, index) {
                     final item = items[index];
-                    final isExpanded = expandedIndex == index; // Check if this card is expanded
-
+                    
                     return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          expandedIndex = isExpanded ? null : index; // Toggle expansion
-                        });
-                      },
                       child: Card(
                         child: Column(
                           children: [
@@ -102,11 +93,6 @@ class _NgoDonationListingScreenState extends State<NgoDonationListingScreen> {
                                 onPressed: () => print(item.ngoCode), // Show review dialog
                               ),
                             ),
-                            if (isExpanded)
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Text(item.description), // Show recipe details
-                              ),
                           ],
                         ),
                       ),
@@ -123,6 +109,9 @@ class _NgoDonationListingScreenState extends State<NgoDonationListingScreen> {
               onPressed: _onAddButtonPressed,
               child: Icon(Icons.add),
               backgroundColor: Colors.lightBlue,
+              shape: CircleBorder(),
+              elevation: 10.0, 
+              highlightElevation: 15.0,
             ),
           ),
         ],

@@ -15,7 +15,12 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         color: const Color(0xFFFFF4EC), // Setting the background color
-        child: SingleChildScrollView(
+       
+       child: Center(
+                child: SizedBox(
+                width: double.infinity,
+                height: 850.0, // Increase this value to change the height of the camera preview
+                child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -58,6 +63,8 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         ),
+                  ),
+                  ),
       ),
     );
   }

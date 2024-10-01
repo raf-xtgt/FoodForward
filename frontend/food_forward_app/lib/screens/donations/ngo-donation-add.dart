@@ -20,7 +20,7 @@ class _NgoDonationAddScreenState extends State<NgoDonationAddScreen> {
   List<FoodStockHdrSchema> selectedItems = []; // List to keep track of selected items
   String recipeText = '';
   String userId = '';
-  String? _selectedFilter = 'Near Expiry'; // Variable to track the selected filter
+// Variable to track the selected filter
   int _selectedIndex = 4; // Track the index of the selected tab
 
   @override
@@ -61,9 +61,9 @@ class _NgoDonationAddScreenState extends State<NgoDonationAddScreen> {
 
   void _filterNearExpiryItems() {
     setState(() {
-      _selectedFilter = 'Near Expiry'; // Set as selected
+// Set as selected
       items = items.where((item) {
-          return item.expiryDate != null && item.expiryDate!.isAfter(DateTime.now()) && item.expiryDate!.isBefore(DateTime.now().add(const Duration(days: 7)));
+          return item.expiryDate.isAfter(DateTime.now()) && item.expiryDate.isBefore(DateTime.now().add(const Duration(days: 7)));
       }).toList();
       
     });
@@ -142,7 +142,7 @@ class _NgoDonationAddScreenState extends State<NgoDonationAddScreen> {
               ],
             ),
             title: Text(item.name),
-            subtitle: Text('Qty: ${item.quantity ?? 'N/A'}, Price: ${item.unitPrice ?? 'N/A'}, Expiry: ${item.expiryDate?.toLocal().toString().split(' ')[0] ?? 'N/A'}'),
+            subtitle: Text('Qty: ${item.quantity}, Price: ${item.unitPrice}, Expiry: ${item.expiryDate.toLocal().toString().split(' ')[0]}'),
             trailing: IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () async {
