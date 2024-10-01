@@ -62,6 +62,7 @@ class _NgoDonationListingScreenState extends State<NgoDonationListingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFFFF4EC),
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text("Ngo Donation Listing"),
@@ -84,6 +85,14 @@ class _NgoDonationListingScreenState extends State<NgoDonationListingScreen> {
                     
                     return GestureDetector(
                       child: Card(
+                        elevation: 2, // Add some elevation for shadow effect
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0), 
+                          side: const BorderSide(
+                            color: Color(0xFF3C9CD6), // Blue border color
+                            width: 2.0,
+                          ),// Make the card's border rounded
+                        ),
                         child: Column(
                           children: [
                             ListTile(

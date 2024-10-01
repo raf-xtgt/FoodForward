@@ -256,61 +256,61 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
           Expanded(
             child: ListView.builder(
               itemCount: items.length,
-    itemBuilder: (context, index) {
-      final item = items[index];
-      final isSelected = selectedItems.contains(item);
-      return GestureDetector(
-        onLongPress: () => _toggleSelection(item),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0), // Add padding to the left and righ
-          child: Card(
-            color: isSelected ? Colors.blue.shade100 : null, // Change color if selected
-            elevation: 2, // Add some elevation for shadow effect
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0), 
-              side: const BorderSide(
-                color: Color(0xFF3C9CD6), // Blue border color
-                width: 2.0,
-              ),// Make the card's border rounded
-            ),
-            child: ListTile(
-              leading: Row(
-                mainAxisSize: MainAxisSize.min, // Use minimum space
-                children: [
-                  // Deselect icon only when the item is selected
-                  if (isSelected)
-                    IconButton(
-                      icon: const Icon(Icons.clear, color: Colors.red), // Deselect icon
-                      onPressed: () {
-                        _toggleSelection(item); // Deselect the item
-                      },
-                    ),
-                  _buildExpiryIndicator(item.expiryDate), // Display expiry indicator
-                ],
-              ),
-              title: Text(item.name),
-              subtitle: Text('Qty: ${item.quantity ?? 'N/A'}, Price: ${item.unitPrice ?? 'N/A'}, Expiry: ${item.expiryDate?.toLocal().toString().split(' ')[0] ?? 'N/A'}'),
-              trailing: IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () async {
-                  final updatedItem = await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => EditStockItemScreen(item: item),
-                    ),
-                  );
+              itemBuilder: (context, index) {
+                final item = items[index];
+                final isSelected = selectedItems.contains(item);
+                return GestureDetector(
+                  onLongPress: () => _toggleSelection(item),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0), // Add padding to the left and righ
+                    child: Card(
+                      color: isSelected ? Colors.blue.shade100 : null, // Change color if selected
+                      elevation: 2, // Add some elevation for shadow effect
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0), 
+                        side: const BorderSide(
+                          color: Color(0xFF3C9CD6), // Blue border color
+                          width: 2.0,
+                        ),// Make the card's border rounded
+                      ),
+                      child: ListTile(
+                        leading: Row(
+                          mainAxisSize: MainAxisSize.min, // Use minimum space
+                          children: [
+                            // Deselect icon only when the item is selected
+                            if (isSelected)
+                              IconButton(
+                                icon: const Icon(Icons.clear, color: Colors.red), // Deselect icon
+                                onPressed: () {
+                                  _toggleSelection(item); // Deselect the item
+                                },
+                              ),
+                            _buildExpiryIndicator(item.expiryDate), // Display expiry indicator
+                          ],
+                        ),
+                        title: Text(item.name),
+                        subtitle: Text('Qty: ${item.quantity ?? 'N/A'}, Price: ${item.unitPrice ?? 'N/A'}, Expiry: ${item.expiryDate?.toLocal().toString().split(' ')[0] ?? 'N/A'}'),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () async {
+                            final updatedItem = await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => EditStockItemScreen(item: item),
+                              ),
+                            );
 
-                  if (updatedItem != null && updatedItem is FoodStockHdrSchema) {
-                    setState(() {
-                      items[index] = updatedItem; // Update the item in the list
-                    });
-                  }
-                },
-              ),
-            ),
-          ),
-        ),
-      );
-    },
+                            if (updatedItem != null && updatedItem is FoodStockHdrSchema) {
+                              setState(() {
+                                items[index] = updatedItem; // Update the item in the list
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
   ),
 ),
 

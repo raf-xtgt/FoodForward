@@ -64,12 +64,12 @@ class BottomNavigation extends StatelessWidget {
                   index: 4,
                   selectedIndex: selectedIndex,
                 ),
-                _buildBottomNavigationBarItem(
-                  icon: Icons.person,
-                  label: 'Profile',
-                  index: 5,
-                  selectedIndex: selectedIndex,
-                )
+                // _buildBottomNavigationBarItem(
+                //   icon: Icons.person,
+                //   label: 'Profile',
+                //   index: 5,
+                //   selectedIndex: selectedIndex,
+                // )
               ],
             ),
           ),
