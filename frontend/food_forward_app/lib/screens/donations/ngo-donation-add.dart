@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-schema/ngo-hdr.dart';
 import 'package:food_forward_app/api/api-services/services/donation/ngo-hdr-service.dart';
 import 'package:food_forward_app/api/api-services/services/recipe/recipe-service.dart';
-import 'package:food_forward_app/screens/donations/ngo-donation-add.dart';
+import 'package:food_forward_app/screens/profile/profile-screen.dart';
 import 'package:pdf/widgets.dart' as pw; // PDF library
 
-class NgoListingScreen extends StatefulWidget {
+class NgoDonationListingScreen extends StatefulWidget {
   @override
-  _NgoListingScreenState createState() => _NgoListingScreenState();
+  _NgoDonationListingScreenState createState() => _NgoDonationListingScreenState();
 }
 
-class _NgoListingScreenState extends State<NgoListingScreen> {
+class _NgoDonationListingScreenState extends State<NgoDonationListingScreen> {
   List<NgoHdrSchema> items = [];
   List<NgoHdrSchema> selectedItems = []; // List to keep track of selected items
   int? expandedIndex; // Track the currently expanded card index
@@ -39,18 +39,30 @@ class _NgoListingScreenState extends State<NgoListingScreen> {
     });
   }
 
-    void _navigateToAddDonation() async {
+
+  void _navigateToProfile() async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => NgoDonationListingScreen(),
+        builder: (context) => ProfileScreen(),
       ),
     );
 
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text("Uwu"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: _navigateToProfile,
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Expanded(
@@ -72,10 +84,10 @@ class _NgoListingScreenState extends State<NgoListingScreen> {
                     child: Column(
                       children: [
                         ListTile(
-                          title: Text('${item.name }'),
+                          title: Text('${item.code }'),
                           trailing: IconButton(
                             icon: const Icon(Icons.arrow_circle_right),
-                            onPressed: _navigateToAddDonation, // Show review dialog
+                            onPressed: () => print(item.name), // Show review dialog
                           ),
                         ),
                         if (isExpanded) ...[
