@@ -143,8 +143,8 @@ public class NgoDonationHdrController {
     }
 
     @GetMapping(value ="/read/all/{ngoId}")
-    public ResponseEntity<StreamingResponseBody> readByNgoId(@PathVariable final String id) {
-        final Optional<List<NgoDonationHdrContainer>> list = service.getNgoDonationsByNgoId(id);
+    public ResponseEntity<StreamingResponseBody> readByNgoId(@PathVariable final String ngoId) {
+        final Optional<List<NgoDonationHdrContainer>> list = service.getNgoDonationsByNgoId(ngoId);
 
         if (list.isPresent()) {
             StreamingResponseBody responseBody = outputStream -> {

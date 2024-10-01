@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:food_forward_app/api/api-services/api-model/db-schema/ngo-donation-hdr.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-schema/ngo-hdr.dart';
+import 'package:food_forward_app/api/api-services/services/donation/donation-service.dart';
 import 'package:food_forward_app/api/api-services/services/donation/ngo-hdr-service.dart';
 import 'package:food_forward_app/api/api-services/services/recipe/recipe-service.dart';
 import 'package:food_forward_app/components/bottom-navigation/bottom-navigation.dart';
@@ -15,8 +17,8 @@ class NgoDonationListingScreen extends StatefulWidget {
 }
 
 class _NgoDonationListingScreenState extends State<NgoDonationListingScreen> {
-  List<NgoHdrSchema> items = [];
-  List<NgoHdrSchema> selectedItems = []; // List to keep track of selected items
+  List<NgoDonationHdrSchema> items = [];
+  List<NgoDonationHdrSchema> selectedItems = []; // List to keep track of selected items
   int? expandedIndex; // Track the currently expanded card index
   int _selectedIndex = 4; // Track the index of the selected tab
 
@@ -27,24 +29,13 @@ class _NgoDonationListingScreenState extends State<NgoDonationListingScreen> {
   }
 
   void _getData() async {
-    print(widget.ngoItem?.code);
-        print(widget.ngoItem?.guid);
-    List<NgoHdrSchema> fetchedItems = await NgoHdrService.getNgoList();
+      print(widget.ngoItem?.guid);
+    List<NgoDonationHdrSchema> fetchedItems = await DonationService.getDonationList(widget.ngoItem!.guid);
     setState(() {
       items = fetchedItems; // Update the state with the fetched data
     });
   }
 
-  // Function to handle card selection and deselection
-  void _toggleSelection(NgoHdrSchema item) {
-    setState(() {
-      if (selectedItems.contains(item)) {
-        selectedItems.remove(item); // Deselect if already selected
-      } else {
-        selectedItems.add(item); // Select the item
-      }
-    });
-  }
 
   void _navigateToProfile() async {
     await Navigator.of(context).push(
@@ -93,7 +84,6 @@ class _NgoDonationListingScreenState extends State<NgoDonationListingScreen> {
                   itemCount: items.length,
                   itemBuilder: (context, index) {
                     final item = items[index];
-                    final isSelected = selectedItems.contains(item);
                     final isExpanded = expandedIndex == index; // Check if this card is expanded
 
                     return GestureDetector(
@@ -103,14 +93,13 @@ class _NgoDonationListingScreenState extends State<NgoDonationListingScreen> {
                         });
                       },
                       child: Card(
-                        color: isSelected ? Colors.blue.shade100 : null, // Change color if selected
                         child: Column(
                           children: [
                             ListTile(
-                              title: Text('${item.code}'),
+                              title: Text('Donation #${item.docNo}'),
                               trailing: IconButton(
                                 icon: const Icon(Icons.track_changes),
-                                onPressed: () => print(item.name), // Show review dialog
+                                onPressed: () => print(item.ngoCode), // Show review dialog
                               ),
                             ),
                             if (isExpanded)

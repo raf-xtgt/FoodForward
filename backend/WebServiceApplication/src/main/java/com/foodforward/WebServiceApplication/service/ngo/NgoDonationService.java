@@ -43,7 +43,7 @@ public class NgoDonationService {
             hdr.setNgo_code(ngo.getNgo_hdr().getCode());
         });
         hdr.setDonor_id(dto.getUserId());
-        hdr.setDocNo(generateRandomNumber());
+        hdr.setDoc_no(generateRandomNumber());
         hdr.setCreated_date(Instant.now().toString());
         hdr.setUpdated_date(Instant.now().toString());
 
@@ -58,8 +58,8 @@ public class NgoDonationService {
             final Optional<FoodStock> foodStock = foodStockService.getFoodStockById(fsGuid);
             foodStock.ifPresent((fs) -> {
                 line.setFood_stock_guid(fs.getFood_stock_hdr().getGuid());
-                line.setFood_stock_guid(fs.getFood_stock_hdr().getName());
-                line.setFood_stock_guid(fs.getFood_stock_hdr().getExpiry_date());
+                line.setFood_stock_name(fs.getFood_stock_hdr().getName());
+                line.setFood_stock_exp_date(fs.getFood_stock_hdr().getExpiry_date());
             });
             lineList.add(line);
         });

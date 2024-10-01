@@ -27,12 +27,12 @@ public class ngo_donation_hdr {
         this.guid = guid;
     }
 
-    public String getDocNo() {
+    public String getDoc_no() {
         return doc_no;
     }
 
-    public void setDocNo(String docNo) {
-        this.doc_no = docNo;
+    public void setDoc_no(String doc_no) {
+        this.doc_no = doc_no;
     }
 
     public String getNgo_guid() {

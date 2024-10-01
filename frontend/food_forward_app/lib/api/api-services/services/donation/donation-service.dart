@@ -13,15 +13,16 @@ class DonationService {
   
   static Future<List<NgoDonationHdrSchema>> getDonationList(String ngoId) async {
       String url = "${Config.baseApiUrl}/ngo-donation/read/all/$ngoId";
-      print("food stock url: " + url);
+      print("donation url: " + url);
     
     try {
       final response = await http.get(Uri.parse(url));
       
-      print('food stock query response: ${response}');
+      print('donation response: ${response}');
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
         List<dynamic> data = jsonResponse['data'];
+        print('donation response data: ${data}');
 
         // Parse and return the list of FoodItems
         return data.map((item) => NgoDonationHdrSchema.fromJson(item['ngo_donation_hdr'])).toList();
