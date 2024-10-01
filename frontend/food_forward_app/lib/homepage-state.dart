@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_forward_app/homepage.dart';
 import 'package:food_forward_app/screens/donations/ngo-donation-add.dart';
+import 'package:food_forward_app/screens/donations/ngo-donation-listing.dart';
 import 'package:food_forward_app/screens/donations/ngo-listing.dart';
 import 'package:food_forward_app/screens/home/home-screen.dart';
 import 'package:food_forward_app/components/bottom-navigation/bottom-navigation.dart';
@@ -83,7 +84,8 @@ class MyHomePageState extends State<MyHomePage> {
                   StockAndExpiryScreen(),
                   RecipeListScreen(),
                   NgoListingScreen(),
-                  NgoDonationListingScreen(),
+                  NgoDonationListingScreen(ngoItem: null,),
+                  NgoDonationAddScreen(),
                  ProfileScreen(),
                 ],
               ),

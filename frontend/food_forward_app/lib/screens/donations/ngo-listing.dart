@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-schema/ngo-hdr.dart';
 import 'package:food_forward_app/api/api-services/services/donation/ngo-hdr-service.dart';
 import 'package:food_forward_app/api/api-services/services/recipe/recipe-service.dart';
-import 'package:food_forward_app/screens/donations/ngo-donation-add.dart';
+import 'package:food_forward_app/screens/donations/ngo-donation-listing.dart';
 import 'package:pdf/widgets.dart' as pw; // PDF library
 
 class NgoListingScreen extends StatefulWidget {
@@ -39,13 +39,15 @@ class _NgoListingScreenState extends State<NgoListingScreen> {
     });
   }
 
-    void _navigateToAddDonation() async {
+  // Updated function to pass selected item to the next screen
+  void _navigateToAddDonation(NgoHdrSchema item) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => NgoDonationListingScreen(),
+        builder: (context) => NgoDonationListingScreen(
+          ngoItem: item, // Pass the selected item to the next screen
+        ),
       ),
     );
-
   }
 
   @override
@@ -72,10 +74,10 @@ class _NgoListingScreenState extends State<NgoListingScreen> {
                     child: Column(
                       children: [
                         ListTile(
-                          title: Text('${item.name }'),
+                          title: Text('${item.name}'),
                           trailing: IconButton(
                             icon: const Icon(Icons.arrow_circle_right),
-                            onPressed: _navigateToAddDonation, // Show review dialog
+                            onPressed: () => _navigateToAddDonation(item), // Pass the item
                           ),
                         ),
                         if (isExpanded) ...[
