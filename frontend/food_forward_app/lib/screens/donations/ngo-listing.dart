@@ -56,6 +56,40 @@ class _NgoListingScreenState extends State<NgoListingScreen> {
       backgroundColor: const Color(0xFFFFF4EC),
       body: Column(
         children: [
+                      // Header card for "Recipes"
+              Align(
+                alignment: Alignment.topCenter, // Align at the top center of the screen
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 80.0, vertical: 5.0), // Horizontal padding and some vertical space
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF3C9CD6), // Blue background for the icon
+                          shape: BoxShape.circle,
+                        ),
+                        padding: const EdgeInsets.all(8.0), // Reduced padding around the icon
+                        child: const Icon(
+                          Icons.business_center,
+                          size: 40, // Slightly smaller icon size
+                          color: Colors.white, // Set icon color to white
+                        ),
+                      ),
+                      const SizedBox(height: 8.0), // Spacing between the icon and the text
+                      const Text(
+                        'Donate to NGOs',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold, // Text style with bold font
+                          color: Color(0xFF3C9CD6), // Blue color for the text
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+
           Expanded(
             child: ListView.builder(
               itemCount: items.length,
@@ -70,6 +104,9 @@ class _NgoListingScreenState extends State<NgoListingScreen> {
                       expandedIndex = isExpanded ? null : index; // Toggle expansion
                     });
                   },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0), // Add padding to the left and righ
+
                   child: Card(
                     color: isSelected ? Colors.blue.shade100 : null, // Change color if selected
                     elevation: 2, // Add some elevation for shadow effect
@@ -98,6 +135,9 @@ class _NgoListingScreenState extends State<NgoListingScreen> {
                       ],
                     ),
                   ),
+                
+                  ),
+
                 );
               },
             ),
