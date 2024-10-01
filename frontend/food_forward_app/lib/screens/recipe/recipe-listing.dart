@@ -59,7 +59,7 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
                   return GestureDetector(
                     onTap: () {
                       setState(() {
-                        index+=1;
+                        index += 1;
                         rating = index + 1; // Update rating based on the star selected
                       });
                     },
@@ -111,59 +111,96 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFFFF4EC),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                final item = items[index];
-                final isSelected = selectedItems.contains(item);
-                final isExpanded = expandedIndex == index; // Check if this card is expanded
-
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      expandedIndex = isExpanded ? null : index; // Toggle expansion
-                    });
-                  },
-                  child: Card(
-                    color: isSelected ? Colors.blue.shade100 : null, // Change color if selected
-                    elevation: 2, // Add some elevation for shadow effect
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0), 
-                        side: const BorderSide(
-                          color: Color(0xFF3C9CD6), // Blue border color
-                          width: 2.0,
-                        ),// Make the card's border rounded
-                      ),
-                    
-                    child: Column(
-                      children: [
-                        ListTile(
-                          title: Text('Recipe #${index + 1} - ${item.createdDate?.toLocal().toString().split(' ')[0]}'),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.reviews),
-                            onPressed: () => _showReviewDialog(item), // Show review dialog
-                          ),
+      return Scaffold(
+        backgroundColor: const Color(0xFFFFF4EC),
+        body: Column(
+          children: [
+            // Header card for "Recipes"
+              Align(
+                alignment: Alignment.topCenter, // Align at the top center of the screen
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 80.0, vertical: 20.0), // Horizontal padding and some vertical space
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF3C9CD6), // Blue background for the icon
+                          shape: BoxShape.circle,
                         ),
-                        if (isExpanded) ...[
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Text(item.recipeText), // Show recipe details
-                          ),
-                        ],
-                      ],
-                    ),
+                        padding: const EdgeInsets.all(8.0), // Reduced padding around the icon
+                        child: const Icon(
+                          Icons.edit_document,
+                          size: 40, // Slightly smaller icon size
+                          color: Colors.white, // Set icon color to white
+                        ),
+                      ),
+                      const SizedBox(height: 8.0), // Spacing between the icon and the text
+                      const Text(
+                        'Recipes',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold, // Text style with bold font
+                          color: Color(0xFF3C9CD6), // Blue color for the text
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              },
+                ),
+              ),
+
+            Expanded(
+              child: ListView.builder(
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  final isSelected = selectedItems.contains(item);
+                  final isExpanded = expandedIndex == index; // Check if this card is expanded
+
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        expandedIndex = isExpanded ? null : index; // Toggle expansion
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0), // Add padding to the left and righ
+                      child: Card(
+                        color: isSelected ? Colors.blue.shade100 : null, // Change color if selected
+                        elevation: 2, // Add some elevation for shadow effect
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0), 
+                          side: const BorderSide(
+                            color: Color(0xFF3C9CD6), // Blue border color
+                            width: 2.0,
+                          ),
+                        ), // Make the card's border rounded
+                        child: Column(
+                          children: [
+                            ListTile(
+                              title: Text('Recipe #${index + 1} - ${item.createdDate?.toLocal().toString().split(' ')[0]}'),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.reviews),
+                                onPressed: () => _showReviewDialog(item), // Show review dialog
+                              ),
+                            ),
+                            if (isExpanded) ...[
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(item.recipeText), // Show recipe details
+                              ),
+                            ],
+                          ],
+                        ),
+                    ),
+                  
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
     );
+
   }
 }
