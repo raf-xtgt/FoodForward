@@ -19,7 +19,7 @@ class BottomNavigation extends StatelessWidget {
         child: Container(
           height: 60, // Adjust the height of the container for better scrolling experience
           decoration: BoxDecoration(
-            color: const Color(0xFF218DB3), // Blue background color for the Bottom Navigation Bar
+            color: const Color(0xFF2B72A8), // Blue background color for the Bottom Navigation Bar
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.2), // Light shadow for elevation effect

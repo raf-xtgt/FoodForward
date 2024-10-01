@@ -153,7 +153,7 @@ class _NgoDonationListingScreenState extends State<NgoDonationListingScreen> {
             bottom: 16, // Adjust the distance from the bottom of the screen
             child: FloatingActionButton(
               onPressed: _onAddButtonPressed,
-              child: Icon(Icons.add),
+              child: Icon(Icons.add, color: Colors.white),
               backgroundColor: Colors.lightBlue,
               shape: CircleBorder(),
               elevation: 10.0, 

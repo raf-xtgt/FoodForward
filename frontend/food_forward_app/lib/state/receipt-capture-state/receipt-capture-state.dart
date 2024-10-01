@@ -98,6 +98,7 @@ class TakePictureScreenState extends State<ReceiptCaptureScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               FloatingActionButton(
+                backgroundColor: Colors.lightBlue,
                 heroTag: 'cameraButton',
                 onPressed: () async {
                   try {
@@ -128,10 +129,11 @@ class TakePictureScreenState extends State<ReceiptCaptureScreen> {
                     print(e); // Log error to console
                   }
                 },
-                child: const Icon(Icons.camera_alt),
+                child: const Icon(Icons.camera_alt, color: Colors.white),
               ),
               const SizedBox(width: 16.0), // Add spacing between the buttons
               FloatingActionButton(
+                backgroundColor: Colors.lightBlue,
                 heroTag: 'uploadButton',
                 onPressed: () {
                   if (_images.isNotEmpty) {
@@ -140,7 +142,7 @@ class TakePictureScreenState extends State<ReceiptCaptureScreen> {
                     print('No images to upload');
                   }
                 },
-                child: const Icon(Icons.cloud_upload),
+                child: const Icon(Icons.cloud_upload, color: Colors.white),
               ),
             ],
           ),

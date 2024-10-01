@@ -62,10 +62,15 @@ class MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            backgroundColor: const Color(0xFFFFF4EC),
+      backgroundColor: const Color(0xFFFFF4EC),
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        backgroundColor: Color(0xFF2B72A8),
+        title: Text(
+          widget.title,
+          style: const TextStyle(
+            color: Colors.white, // Set the desired color for the title text
+          ),
+    ),
         actions: [
           IconButton(
             icon: Icon(Icons.person),
