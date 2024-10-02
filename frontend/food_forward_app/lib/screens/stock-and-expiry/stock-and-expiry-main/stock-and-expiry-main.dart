@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_forward_app/api/api-services/api-model/db-schema/recipe-hdr.dart';
+import 'package:food_forward_app/components/animations/rotating-icon.dart';
 import 'package:pdf/widgets.dart' as pw; // PDF library
 import 'dart:io';
 import 'package:food_forward_app/screens/stock-and-expiry/stock-and-expiry-edit/stock-and-expiry-edit.dart';
@@ -35,21 +36,47 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
     });
   }
 
-  // Function to get recipe suggestions
-  void _getRecipe() async {
-    print("GET RECIPE");
+void _getRecipe() async {
+  // Show the loading dialog while the recipe is being generated
+  showDialog(
+    context: context,
+    barrierDismissible: false, // Prevents closing the dialog by tapping outside
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        content: const SizedBox(
+          height: 150, // Height of the dialog
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              RotatingIcon(), // Custom rotating icon
+              SizedBox(height: 16),
+              Text(
+                'Generating recipe suggestion...',
+                style: TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 
-    List<String> itemNames = selectedItems.map((item) {
-      return item.name;
-    }).toList();
-    String recipeSuggestion = await FoodStockService.getRecipeSuggestion(itemNames);
-    print("Recipe Suggestion: $recipeSuggestion");
-    setState(() {
-      recipeText = recipeSuggestion; // set recipe
-    });
-    showRecipeDialog(context, recipeSuggestion);
-  }
+  // Get recipe suggestion and close the loading dialog
+  List<String> itemNames = selectedItems.map((item) {
+    return item.name;
+  }).toList();
+  
+  String recipeSuggestion = await FoodStockService.getRecipeSuggestion(itemNames);
+  Navigator.of(context).pop(); // Close the loading dialog once recipe is fetched
 
+  setState(() {
+    recipeText = recipeSuggestion; // Update recipeText state
+  });
+  showRecipeDialog(context, recipeSuggestion); // Show the recipe dialog with the fetched suggestion
+}
   // Function to show the recipe dialog
   void showRecipeDialog(BuildContext context, String recipeContent) {
     showDialog(
@@ -166,6 +193,8 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
     final file = File(filePath);
     await file.writeAsBytes(await pdf.save());
     print("PDF saved at: $filePath");
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Recipe saved as a document'))); 
+
   }
 
   // Function to save the recipe to the backend
@@ -178,7 +207,10 @@ class _StockAndExpiryScreenState extends State<StockAndExpiryScreen> {
       recipeText: recipe,
       userId: userId ?? '',
     );
-    await FoodStockService.saveRecipe(recipeDto);
+    var result = await FoodStockService.saveRecipe(recipeDto);
+     if (result.statusCode == 200){
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Recipe saved successfully'))); 
+    }
   }
 
   Future<void> _consumeRecipeItems() async {
