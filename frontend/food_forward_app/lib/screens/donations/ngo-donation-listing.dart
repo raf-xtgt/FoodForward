@@ -65,13 +65,13 @@ class _NgoDonationListingScreenState extends State<NgoDonationListingScreen> {
       backgroundColor: const Color(0xFFFFF4EC),
       appBar: AppBar(
         backgroundColor: const Color(0xFF2B72A8),
-        title: const Text("Ngo Donation Listing",
+        title: const Text("Donations",
         style: TextStyle(
             color: Colors.white, // Set the desired color for the title text
           ),),
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person, color: Colors.white,),
             onPressed: _navigateToProfile,
           ),
         ],

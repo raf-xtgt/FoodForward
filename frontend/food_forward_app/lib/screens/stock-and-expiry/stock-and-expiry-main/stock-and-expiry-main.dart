@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:food_forward_app/api/api-services/api-model/db-schema/recipe-hdr.dart';
 import 'package:food_forward_app/components/animations/rotating-icon.dart';
 import 'package:pdf/widgets.dart' as pw; // PDF library
 import 'dart:io';
@@ -218,10 +217,11 @@ void _getRecipe() async {
 
     selectedItems.forEach((item) async {
       await FoodStockService.delete(item.guid);
-      items.remove(item);
+      // items.remove(item);
     });
     setState(() {
-      items = items;
+      items.removeWhere((item) => selectedItems.contains(item));
+      selectedItems.clear(); // Clear the selected items list after deletion
     });
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Consumed recipe items')));
   }

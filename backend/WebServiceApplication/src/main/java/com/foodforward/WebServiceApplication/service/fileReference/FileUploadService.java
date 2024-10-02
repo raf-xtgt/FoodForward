@@ -3,6 +3,7 @@ package com.foodforward.WebServiceApplication.service.fileReference;
 import com.foodforward.WebServiceApplication.dao.fileReference.FileReferenceRepository;
 import com.foodforward.WebServiceApplication.model.container.fileReference.FileStorageRef;
 import com.foodforward.WebServiceApplication.model.container.ocr.OCRProcessingQueue;
+import com.foodforward.WebServiceApplication.model.container.recipe.RecipeContainer;
 import com.foodforward.WebServiceApplication.model.databaseSchema.fileReference.file_storage_ref;
 import com.foodforward.WebServiceApplication.service.auth.AuthService;
 import com.foodforward.WebServiceApplication.service.ocr.OCRProcessingQueueService;
@@ -15,9 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class FileUploadService {
@@ -84,5 +83,17 @@ public class FileUploadService {
             e.printStackTrace();
             return null; // Return null if there's an error
         }
+    }
+
+    public Optional<List<FileStorageRef>> getAllScans(){
+        try{
+            List<FileStorageRef> scanList = fileRefDao.findAll().stream().map(FileStorageRef::new).toList();
+            return Optional.of(scanList);
+        }
+        catch(Exception e){
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return Optional.empty();
     }
 }

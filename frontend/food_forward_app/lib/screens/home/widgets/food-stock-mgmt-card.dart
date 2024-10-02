@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_forward_app/api/api-services/services/stats/stats-service.dart';
 
 class FoodStockMgmtCard extends StatefulWidget {
   const FoodStockMgmtCard({super.key});
@@ -9,6 +10,22 @@ class FoodStockMgmtCard extends StatefulWidget {
 
 class _FoodStockMgmtCardState extends State<FoodStockMgmtCard> {
   double _elevation = 4.0; // Initial elevation value
+  String stockCount = "0"; // Initial value set to "0"
+
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+
+  void _getData() async {
+    print("GET FOOD STOCK HDR");
+    String count = await StatService.getInventoryCount(); // Store in a local variable
+    setState(() {
+      stockCount = count; // Update the state variable with the fetched data
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +77,7 @@ class _FoodStockMgmtCardState extends State<FoodStockMgmtCard> {
                 // crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '20',
+                    stockCount,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           color: const Color(0xFF3C9CD6), // Blue color for the number
                           fontWeight: FontWeight.bold,

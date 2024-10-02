@@ -73,7 +73,7 @@ class MyHomePageState extends State<MyHomePage> {
     ),
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person, color: Colors.white,),
             onPressed: _navigateToProfile,
           ),
         ],

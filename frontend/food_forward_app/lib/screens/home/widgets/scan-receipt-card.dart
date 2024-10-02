@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_forward_app/api/api-services/services/stats/stats-service.dart';
 
 class ScanReceiptCard extends StatefulWidget {
   const ScanReceiptCard({super.key});
@@ -9,6 +10,21 @@ class ScanReceiptCard extends StatefulWidget {
 
 class _ScanReceiptCardState extends State<ScanReceiptCard> {
   double _elevation = 4.0; // Initial elevation value
+  String scanCount = "0";
+
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+
+  void _getData() async {
+    print("GET FOOD STOCK HDR");
+    String count = await StatService.getScanCount(); 
+    setState(() {
+      scanCount = "32"; 
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +76,7 @@ class _ScanReceiptCardState extends State<ScanReceiptCard> {
                 // crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '20',
+                    scanCount,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           color: const Color(0xFF3C9CD6), // Blue color for the number
                           fontWeight: FontWeight.bold,

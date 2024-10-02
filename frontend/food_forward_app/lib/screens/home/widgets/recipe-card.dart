@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_forward_app/api/api-services/services/stats/stats-service.dart';
 
 class ReceipeCard extends StatefulWidget {
   const ReceipeCard({super.key});
@@ -9,6 +10,21 @@ class ReceipeCard extends StatefulWidget {
 
 class _ReceipeCardState extends State<ReceipeCard> {
   double _elevation = 4.0; // Initial elevation value
+  String recipeCount = "0"; // Initial value set to "0"
+
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+
+  void _getData() async {
+    print("GET FOOD STOCK HDR");
+    String count = await StatService.getRecipeCount(); // Store in a local variable
+    setState(() {
+      recipeCount = count; // Update the state variable with the fetched data
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,23 +60,22 @@ class _ReceipeCardState extends State<ReceipeCard> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Color(0xFF3C9CD6), // White background for the icon
+                  color: const Color(0xFF3C9CD6), // Blue background for the icon
                   shape: BoxShape.circle,
                 ),
                 padding: const EdgeInsets.all(8.0), // Padding around the icon
                 child: const Icon(
                   Icons.fastfood,
                   size: 50,
-                  color: Colors.white, // Set icon color to blue
+                  color: Colors.white, // Set icon color to white
                 ),
               ),
               // Centering the number and text
               Column(
                 mainAxisAlignment: MainAxisAlignment.center, // Center vertically
-                // crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '20',
+                    recipeCount, // Display the recipe count
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           color: const Color(0xFF3C9CD6), // Blue color for the number
                           fontWeight: FontWeight.bold,

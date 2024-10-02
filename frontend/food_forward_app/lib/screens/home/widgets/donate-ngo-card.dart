@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_forward_app/api/api-services/services/stats/stats-service.dart';
 
 class DonateNgoCard extends StatefulWidget {
   const DonateNgoCard({super.key});
@@ -9,6 +10,21 @@ class DonateNgoCard extends StatefulWidget {
 
 class _DonateNgoCardState extends State<DonateNgoCard> {
   double _elevation = 4.0; // Initial elevation value
+  String donationCount = "0"; // Initial value set to "0"
+
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+
+  void _getData() async {
+    print("GET FOOD STOCK HDR");
+    String count = await StatService.getDonationCount(); // Store in a local variable
+    setState(() {
+      donationCount = count; // Update the state variable with the fetched data
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +76,7 @@ class _DonateNgoCardState extends State<DonateNgoCard> {
                 // crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '20',
+                    donationCount,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           color: const Color(0xFF3C9CD6), // Blue color for the number
                           fontWeight: FontWeight.bold,

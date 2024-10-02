@@ -61,7 +61,6 @@ class _NgoDonationAddScreenState extends State<NgoDonationAddScreen> {
 
   void _filterNearExpiryItems() {
     setState(() {
-// Set as selected
       items = items.where((item) {
           return item.expiryDate.isAfter(DateTime.now()) && item.expiryDate.isBefore(DateTime.now().add(const Duration(days: 7)));
       }).toList();
@@ -112,7 +111,7 @@ class _NgoDonationAddScreenState extends State<NgoDonationAddScreen> {
           ),),
         actions: [
           IconButton(
-            icon: const Icon(Icons.person),
+            icon: const Icon(Icons.person, color: Colors.white,),
             onPressed: _navigateToProfile,
           ),
         ],
