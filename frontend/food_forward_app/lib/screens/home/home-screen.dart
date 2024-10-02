@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_forward_app/screens/home/widgets/ngo-card.dart';
 import 'package:food_forward_app/screens/home/widgets/welcome-card.dart';
 import 'package:food_forward_app/screens/home/widgets/donate-ngo-card.dart';
 import 'package:food_forward_app/screens/home/widgets/recipe-card.dart';
@@ -43,19 +44,12 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 16.0),
-                Text("Working towards supporting NGOs worldwide.", 
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color:  Color(0xFF2B72A8),
-                    ),
-                  ),
-               SizedBox(height: 16.0),
-                    // SizedBox(
-                    //   height: 300, // Set height for the map
-                    //   child: MapWidget(), // Custom map widget
-                    // ),
-
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(child: NgoCard()),
+                  ],
+                ),
               ],
             ),
           ),
