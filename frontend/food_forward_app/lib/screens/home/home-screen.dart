@@ -50,7 +50,11 @@ class HomeScreen extends StatelessWidget {
                     color:  Color(0xFF2B72A8),
                     ),
                   ),
-              
+               SizedBox(height: 16.0),
+                    // SizedBox(
+                    //   height: 300, // Set height for the map
+                    //   child: MapWidget(), // Custom map widget
+                    // ),
 
               ],
             ),

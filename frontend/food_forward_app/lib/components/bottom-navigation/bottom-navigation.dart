@@ -42,13 +42,13 @@ class BottomNavigation extends StatelessWidget {
                 ),
                 _buildBottomNavigationBarItem(
                   icon: Icons.document_scanner,
-                  label: 'Receipt Capture',
+                  label: 'Scan',
                   index: 1,
                   selectedIndex: selectedIndex,
                 ),
                 _buildBottomNavigationBarItem(
                   icon: Icons.food_bank,
-                  label: 'Stock & Expiry',
+                  label: 'Inventory',
                   index: 2,
                   selectedIndex: selectedIndex,
                 ),
