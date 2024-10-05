@@ -87,7 +87,8 @@ class _DonateNgoCardState extends State<DonateNgoCard> {
                     'Donations',
                     style: TextStyle(
                       fontSize: 16.0, // Smaller text size
-                      color: Color(0xFF3C9CD6), // Blue color for the text
+                      color: Color(0xFF3C9CD6),
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],

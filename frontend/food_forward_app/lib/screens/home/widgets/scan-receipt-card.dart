@@ -20,7 +20,6 @@ class _ScanReceiptCardState extends State<ScanReceiptCard> {
 
   void _getData() async {
     print("GET FOOD STOCK HDR");
-    String count = await StatService.getScanCount(); 
     setState(() {
       scanCount = "32"; 
     });
@@ -59,7 +58,7 @@ class _ScanReceiptCardState extends State<ScanReceiptCard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color(0xFF3C9CD6), // White background for the icon
                   shape: BoxShape.circle,
                 ),
@@ -88,6 +87,7 @@ class _ScanReceiptCardState extends State<ScanReceiptCard> {
                     style: TextStyle(
                       fontSize: 16.0, // Smaller text size
                       color: Color(0xFF3C9CD6), // Blue color for the text
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],

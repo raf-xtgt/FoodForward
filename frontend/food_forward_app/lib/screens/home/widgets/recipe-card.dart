@@ -59,8 +59,8 @@ class _ReceipeCardState extends State<ReceipeCard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFF3C9CD6), // Blue background for the icon
+                decoration: const BoxDecoration(
+                  color: Color(0xFF3C9CD6), // Blue background for the icon
                   shape: BoxShape.circle,
                 ),
                 padding: const EdgeInsets.all(8.0), // Padding around the icon
@@ -87,6 +87,7 @@ class _ReceipeCardState extends State<ReceipeCard> {
                     style: TextStyle(
                       fontSize: 16.0, // Smaller text size
                       color: Color(0xFF3C9CD6), // Blue color for the text
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],

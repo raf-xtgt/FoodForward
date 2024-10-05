@@ -89,6 +89,7 @@ class _FoodStockMgmtCardState extends State<FoodStockMgmtCard> {
                     style: TextStyle(
                       fontSize: 16.0, // Smaller text size
                       color: Color(0xFF3C9CD6), // Blue color for the text
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],

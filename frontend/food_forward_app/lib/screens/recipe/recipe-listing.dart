@@ -186,7 +186,8 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
                             if (isExpanded) ...[
                               Padding(
                                 padding: const EdgeInsets.all(16.0),
-                                child: Text(item.recipeText), // Show recipe details
+                                child: Text(item.recipeText, 
+                                style: TextStyle(fontFamily: 'Lato', fontSize: 18),), // Show recipe details
                               ),
                             ],
                           ],

@@ -36,6 +36,8 @@ class TakePictureScreenState extends State<ReceiptCaptureScreen> {
   Future<void> uploadImages() async {
     await ImageUploadService.uploadImages(_images);
     clearImageList();
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Receipt scan successful'))); 
+
   }
 
   void clearImageList() {
