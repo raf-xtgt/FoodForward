@@ -87,5 +87,5 @@ flutter emulators --launch Pixel_8_Pro_API_33
 flutter run
 ```
 
-## Demo Vide
+## Demo Video
 [![IMAGE ALT TEXT HERE](https://i9.ytimg.com/vi_webp/voLiNnZt2SQ/sddefault.webp?v=66fdc7ab&sqp=CID6hLgG&rs=AOn4CLA6cUlqjLgMl0UjbsafSnAAianMdg)](https://www.youtube.com/watch?v=voLiNnZt2SQ)
